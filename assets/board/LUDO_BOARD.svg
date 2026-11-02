@@ -1,0 +1,285 @@
+
+<svg width="750" height="750" viewBox="0 0 750 750" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <!-- Home zone fills -->
+  <linearGradient id="gHome" x1="0" y1="0" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#6abf7a"/>
+    <stop offset="100%" stop-color="#2e8b4a"/>
+  </linearGradient>
+  <linearGradient id="rHome" x1="450" y1="0" x2="750" y2="300" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#f07080"/>
+    <stop offset="100%" stop-color="#d93040"/>
+  </linearGradient>
+  <linearGradient id="yHome" x1="0" y1="450" x2="300" y2="750" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#ffe030"/>
+    <stop offset="100%" stop-color="#f0b000"/>
+  </linearGradient>
+  <linearGradient id="bHome" x1="450" y1="450" x2="750" y2="750" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#6aabf0"/>
+    <stop offset="100%" stop-color="#2060d0"/>
+  </linearGradient>
+
+  <!-- Track cell colors -->
+  <linearGradient id="wCell" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#b0b0b0"/>
+    <stop offset="100%" stop-color="#f0f0f0"/>
+  </linearGradient>
+
+  <!-- Safe cell colors -->
+  <linearGradient id="gSafe" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#2e9e30"/>
+    <stop offset="100%" stop-color="#1a6e20"/>
+  </linearGradient>
+  <linearGradient id="rSafe" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#d03030"/>
+    <stop offset="100%" stop-color="#a01010"/>
+  </linearGradient>
+  <linearGradient id="bSafe" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#1a70d0"/>
+    <stop offset="100%" stop-color="#0a40a0"/>
+  </linearGradient>
+  <linearGradient id="ySafe" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#e0c000"/>
+    <stop offset="100%" stop-color="#b09000"/>
+  </linearGradient>
+
+  <!-- Home path colors -->
+  <linearGradient id="gPath" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#2a9040"/>
+    <stop offset="100%" stop-color="#308040"/>
+  </linearGradient>
+  <linearGradient id="rPath" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#d03050"/>
+    <stop offset="100%" stop-color="#c03050"/>
+  </linearGradient>
+  <linearGradient id="bPath" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#1a60d0"/>
+    <stop offset="100%" stop-color="#1050b0"/>
+  </linearGradient>
+  <linearGradient id="yPath" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#ffe030"/>
+    <stop offset="100%" stop-color="#e0c000"/>
+  </linearGradient>
+
+  <!-- Center star gradient -->
+  <radialGradient id="cCenter" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ffe030"/>
+    <stop offset="60%" stop-color="#f0b000"/>
+    <stop offset="100%" stop-color="#b07800"/>
+  </radialGradient>
+
+  <!-- Subtle shadow -->
+  <filter id="sh" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#00000022"/>
+  </filter>
+
+  <!-- Piece slot pattern -->
+  <filter id="inset" x="-5%" y="-5%" width="110%" height="110%">
+    <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#00000033" result="shadow"/>
+  </filter>
+</defs>
+
+<!-- ======== BACKGROUND ======== -->
+<rect x="0" y="0" width="750" height="750" rx="16" fill="#d0d0c8"/>
+
+<!-- ======== HOME ZONES ======== -->
+<!-- GREEN -->
+<rect x="2" y="2" width="296" height="296" rx="12" fill="url(#gHome)"/>
+<rect x="2" y="2" width="296" height="296" rx="12" fill="none" stroke="#1a8030" stroke-width="2"/>
+<!-- Green inner diamond -->
+<rect x="75" y="75" width="150" height="150" rx="75" fill="rgba(255,255,255,0.4)" stroke="#1a8030" stroke-width="1.5"/>
+
+<!-- RED -->
+<rect x="452" y="2" width="296" height="296" rx="12" fill="url(#rHome)"/>
+<rect x="452" y="2" width="296" height="296" rx="12" fill="none" stroke="#b01020" stroke-width="2"/>
+<!-- Red inner circle -->
+<rect x="527" y="75" width="150" height="150" rx="75" fill="rgba(255,255,255,0.4)" stroke="#b01020" stroke-width="1.5"/>
+
+<!-- YELLOW -->
+<rect x="2" y="452" width="296" height="296" rx="12" fill="url(#yHome)"/>
+<rect x="2" y="452" width="296" height="296" rx="12" fill="none" stroke="#b09000" stroke-width="2"/>
+<!-- Yellow inner circle -->
+<rect x="75" y="527" width="150" height="150" rx="75" fill="rgba(255,255,255,0.4)" stroke="#b09000" stroke-width="1.5"/>
+
+<!-- BLUE -->
+<rect x="452" y="452" width="296" height="296" rx="12" fill="url(#bHome)"/>
+<rect x="452" y="452" width="296" height="296" rx="12" fill="none" stroke="#0a40b0" stroke-width="2"/>
+<!-- Blue inner circle -->
+<rect x="527" y="527" width="150" height="150" rx="75" fill="rgba(255,255,255,0.4)" stroke="#0a40b0" stroke-width="1.5"/>
+
+<!-- ======== TRACK GRID BACKGROUND ======== -->
+<!-- Center cross background -->
+<rect x="300" y="0" width="150" height="750" fill="#999999" rx="0"/>
+<rect x="0" y="300" width="750" height="150" fill="#999999" rx="0"/>
+<!-- Clean the corner overlaps -->
+<rect x="300" y="300" width="150" height="150" fill="#888888"/>
+
+<!-- ======== TRACK CELLS — VERTICAL x=300 ======== -->
+<!-- Top strip -->
+<rect x="301" y="1"   width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="51"  width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="101" width="48" height="48" rx="5" fill="url(#gSafe)" stroke="#1a6e20" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="301" y="151" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="201" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="251" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<!-- Bottom strip -->
+<rect x="301" y="451" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="501" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="551" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="601" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="301" y="651" width="48" height="48" rx="5" fill="url(#ySafe)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="301" y="701" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== RED HOME PATH x=350 ======== -->
+<rect x="351" y="1"   width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="351" y="51"  width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="101" width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="151" width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="201" width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="251" width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="301" width="48" height="48" rx="5" fill="url(#rPath)" stroke="#b01020" stroke-width="1.5" filter="url(#sh)"/>
+<!-- Yellow home path -->
+<rect x="351" y="401" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="451" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="501" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="551" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="601" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="651" width="48" height="48" rx="5" fill="url(#yPath)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="351" y="701" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== TRACK CELLS — VERTICAL x=400 ======== -->
+<rect x="401" y="1"   width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="51"  width="48" height="48" rx="5" fill="url(#rSafe)" stroke="#a01010" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="401" y="101" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="151" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="201" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="251" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="451" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="501" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="551" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="601" width="48" height="48" rx="5" fill="url(#bSafe)" stroke="#0a40a0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="401" y="651" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="401" y="701" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== TRACK CELLS — HORIZONTAL y=300 ======== -->
+<rect x="1"   y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="51"  y="301" width="48" height="48" rx="5" fill="url(#gSafe)" stroke="#1a6e20" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="101" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="151" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="201" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="251" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="451" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="501" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="551" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="601" y="301" width="48" height="48" rx="5" fill="url(#rSafe)" stroke="#a01010" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="651" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="701" y="301" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== GREEN HOME PATH y=350 ======== -->
+<rect x="1"   y="351" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="51"  y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="101" y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="151" y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="201" y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="251" y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="301" y="351" width="48" height="48" rx="5" fill="url(#gPath)" stroke="#1a8030" stroke-width="1.5" filter="url(#sh)"/>
+<!-- Blue home path -->
+<rect x="401" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="451" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="501" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="551" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="601" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="651" y="351" width="48" height="48" rx="5" fill="url(#bPath)" stroke="#0a40b0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="701" y="351" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== TRACK CELLS — HORIZONTAL y=400 ======== -->
+<rect x="1"   y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="51"  y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="101" y="401" width="48" height="48" rx="5" fill="url(#ySafe)" stroke="#b09000" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="151" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="201" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="251" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="451" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="501" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="551" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="601" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+<rect x="651" y="401" width="48" height="48" rx="5" fill="url(#bSafe)" stroke="#0a40a0" stroke-width="1.5" filter="url(#sh)"/>
+<rect x="701" y="401" width="48" height="48" rx="5" fill="url(#wCell)" stroke="#aaaaaa" stroke-width="1" filter="url(#sh)"/>
+
+<!-- ======== CENTER STAR ======== -->
+<rect x="300" y="300" width="150" height="150" fill="#d0d0c8"/>
+<path d="M300,300 L375,375 L450,300 Z" fill="#d03050" stroke="#b01020" stroke-width="1"/>
+<path d="M450,300 L375,375 L450,450 Z" fill="#1a60d0" stroke="#0a40b0" stroke-width="1"/>
+<path d="M300,450 L375,375 L450,450 Z" fill="#ffe030" stroke="#b09000" stroke-width="1"/>
+<path d="M300,300 L375,375 L300,450 Z" fill="#2a9040" stroke="#1a8030" stroke-width="1"/>
+<!-- Center circle -->
+<circle cx="375" cy="375" r="22" fill="url(#cCenter)" stroke="#a08000" stroke-width="1.5"/>
+<circle cx="375" cy="375" r="10" fill="white" opacity="0.6"/>
+
+<!-- ======== PIECE HOME SLOTS ======== -->
+<!-- GREEN -->
+<circle cx="75"  cy="150" r="22" fill="white" stroke="#1a8030" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="150" cy="75"  r="22" fill="white" stroke="#1a8030" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="225" cy="150" r="22" fill="white" stroke="#1a8030" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="150" cy="225" r="22" fill="white" stroke="#1a8030" stroke-width="2.5" filter="url(#sh)"/>
+<!-- Green inner dots -->
+<circle cx="75"  cy="150" r="12" fill="#308040"/>
+<circle cx="150" cy="75"  r="12" fill="#308040"/>
+<circle cx="225" cy="150" r="12" fill="#308040"/>
+<circle cx="150" cy="225" r="12" fill="#308040"/>
+
+<!-- RED -->
+<circle cx="525" cy="150" r="22" fill="white" stroke="#b01020" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="600" cy="75"  r="22" fill="white" stroke="#b01020" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="675" cy="150" r="22" fill="white" stroke="#b01020" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="600" cy="225" r="22" fill="white" stroke="#b01020" stroke-width="2.5" filter="url(#sh)"/>
+<!-- Red inner dots -->
+<circle cx="525" cy="150" r="12" fill="#c03050"/>
+<circle cx="600" cy="75"  r="12" fill="#c03050"/>
+<circle cx="675" cy="150" r="12" fill="#c03050"/>
+<circle cx="600" cy="225" r="12" fill="#c03050"/>
+
+<!-- BLUE -->
+<circle cx="525" cy="600" r="22" fill="white" stroke="#0a40b0" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="600" cy="525" r="22" fill="white" stroke="#0a40b0" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="675" cy="600" r="22" fill="white" stroke="#0a40b0" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="600" cy="675" r="22" fill="white" stroke="#0a40b0" stroke-width="2.5" filter="url(#sh)"/>
+<!-- Blue inner dots -->
+<circle cx="525" cy="600" r="12" fill="#1050b0"/>
+<circle cx="600" cy="525" r="12" fill="#1050b0"/>
+<circle cx="675" cy="600" r="12" fill="#1050b0"/>
+<circle cx="600" cy="675" r="12" fill="#1050b0"/>
+
+<!-- YELLOW -->
+<circle cx="75"  cy="600" r="22" fill="white" stroke="#b09000" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="150" cy="525" r="22" fill="white" stroke="#b09000" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="225" cy="600" r="22" fill="white" stroke="#b09000" stroke-width="2.5" filter="url(#sh)"/>
+<circle cx="150" cy="675" r="22" fill="white" stroke="#b09000" stroke-width="2.5" filter="url(#sh)"/>
+<!-- Yellow inner dots -->
+<circle cx="75"  cy="600" r="12" fill="#e0c000"/>
+<circle cx="150" cy="525" r="12" fill="#e0c000"/>
+<circle cx="225" cy="600" r="12" fill="#e0c000"/>
+<circle cx="150" cy="675" r="12" fill="#e0c000"/>
+
+<!-- ======== SAFE CELL STARS ======== -->
+<!-- Small star on each safe cell -->
+<!-- Green safe (301,101) -->
+<text x="325" y="132" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Red safe (401,51) -->
+<text x="425" y="82" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Blue safe (401,601) -->
+<text x="425" y="632" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Yellow safe (301,651) -->
+<text x="325" y="682" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Green start (51,301) -->
+<text x="75" y="332" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Red start (601,301) -->
+<text x="625" y="332" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Yellow start (101,401) -->
+<text x="125" y="432" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+<!-- Blue start (651,401) -->
+<text x="675" y="432" text-anchor="middle" font-size="18" fill="white" opacity="0.9">★</text>
+
+<!-- ======== OUTER BORDER ======== -->
+<rect x="1" y="1" width="748" height="748" rx="16" fill="none" stroke="#505050" stroke-width="2"/>
+</svg> 
