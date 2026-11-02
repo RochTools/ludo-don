@@ -1,0 +1,190 @@
+:root {
+  --bg: #101c26;
+  --panel: #1b2b38;
+  --ink: #eef3f7;
+  --muted: #9db0bf;
+  --accent: #ffcc33;
+  --step: 190ms;
+  --dice: 76px;
+  /* page background (path is relative to this css file). Alternative: ../assets/backgrounds/bg-deco.webp */
+  --bg-img: url(../assets/backgrounds/bg-blue.webp);
+  /* portrait: board fills the width, leaving room for top bar + two dice rows */
+  --bs: min(calc(100vw - 16px), calc(100dvh - 64px - 2 * var(--dice) - 40px));
+}
+
+* { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg) var(--bg-img, none) center / cover no-repeat;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+#app { height: 100dvh; display: flex; flex-direction: column; }
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+
+.screen { display: none; flex: 1; min-height: 0; }
+.screen.active { display: flex; }
+
+/* ---------- Start screen ---------- */
+#screen-menu { align-items: center; justify-content: center; padding: 16px; overflow: auto; }
+.menu-card {
+  width: min(100%, 420px);
+  background: var(--panel);
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+  display: flex; flex-direction: column; gap: 12px;
+  margin: auto;
+}
+.logo { margin: 0; text-align: center; font-size: 3rem; letter-spacing: .04em; color: var(--accent); text-shadow: 0 4px 18px rgba(255, 204, 51, .35); }
+.sub { margin: 0 0 4px; text-align: center; color: var(--muted); }
+.seats { display: flex; flex-direction: column; gap: 10px; }
+.seat { display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, .05); border-radius: 16px; padding: 8px 12px; }
+.seat img { width: 34px; height: 34px; flex: none; }
+.seat .nm { flex: none; width: 62px; font-weight: 700; }
+.seg { flex: 1; min-width: 0; display: flex; background: rgba(0, 0, 0, .3); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg button { flex: 1 1 auto; white-space: nowrap; border: 0; background: transparent; padding: 8px 6px; border-radius: 9px; cursor: pointer; color: var(--muted); font-size: .85rem; }
+.seg button.on { background: var(--accent); color: #2a2000; font-weight: 700; }
+@media (max-width: 350px) {
+  .seat { gap: 6px; padding: 8px; }
+  .seat img { width: 26px; height: 26px; }
+  .seat .nm { width: 50px; font-size: .9rem; }
+  .seg button { padding: 8px 4px; font-size: .8rem; }
+}
+.error { margin: 0; color: #ff8a8a; text-align: center; font-size: .95rem; }
+
+.btn {
+  border: 0; border-radius: 16px; padding: 14px 18px; font-size: 1.1rem; cursor: pointer;
+  background: rgba(255, 255, 255, .1); transition: transform .1s, background .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--accent); color: #2a2000; font-weight: 800; box-shadow: 0 6px 20px rgba(255, 204, 51, .3); }
+
+/* ---------- Game ---------- */
+#screen-game { flex-direction: column; align-items: center; padding: env(safe-area-inset-top) 8px env(safe-area-inset-bottom); }
+.topbar { width: 100%; display: flex; justify-content: flex-end; padding-top: 8px; height: 56px; }
+.icon-btn { width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #fff; display: grid; place-items: center; cursor: pointer; }
+.icon-btn svg { width: 26px; height: 26px; fill: #fff; display: block; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .75)); }
+.icon-btn:focus { outline: none; }
+.icon-btn:active svg { opacity: .6; }
+
+/* two dice above the board (green, red), two below (yellow, blue) */
+.stage {
+  flex: 1; min-height: 0; width: var(--bs);
+  display: grid; align-content: center; gap: 12px 0;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "g r" "board board" "y b";
+}
+.dice-slot[data-c="green"] { grid-area: g; justify-self: start; }
+.dice-slot[data-c="red"] { grid-area: r; justify-self: end; }
+.dice-slot[data-c="yellow"] { grid-area: y; justify-self: start; }
+.dice-slot[data-c="blue"] { grid-area: b; justify-self: end; }
+.board { grid-area: board; }
+
+.board { position: relative; width: 100%; aspect-ratio: 1; direction: ltr; border-radius: 2.1%; box-shadow: 0 6px 16px rgba(0, 0, 0, .45); }
+.board-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+.pieces { position: absolute; inset: 0; pointer-events: none; }
+.piece {
+  position: absolute; left: 0; top: 0; width: 5.8%; aspect-ratio: 1; pointer-events: none;
+  transition: transform var(--step) ease-in-out;
+}
+.pieces.instant .piece { transition: none; }
+.piece .hop { display: block; width: 100%; height: 100%; }
+.piece img { display: block; width: 100%; height: 100%; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .55)); -webkit-user-drag: none; }
+.piece.hopping .hop { animation: hop var(--step) ease-out; }
+@keyframes hop { 50% { transform: translateY(-38%) scale(1.15); } }
+.piece.movable { pointer-events: auto; cursor: pointer; }
+.piece.movable .hop { animation: bounce .7s ease-in-out infinite; }
+.piece.movable img { filter: drop-shadow(0 0 6px var(--accent)); }
+.piece.movable::after { content: ""; position: absolute; inset: -22%; border: 3px solid var(--accent); border-radius: 50%; animation: ring 1s ease-out infinite; pointer-events: none; }
+@keyframes bounce { 50% { transform: translateY(-16%); } }
+@keyframes ring { from { transform: scale(.8); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+
+/* ---------- Dice ---------- (only transform / opacity are animated: cheap on phones) */
+.dice-slot { position: relative; z-index: 3; --pc: #fff; transition: transform .2s; }
+.dice-slot:not(.active) { transform: scale(.92); }
+.dice {
+  position: relative; width: var(--dice); height: var(--dice); padding: 8px; border-radius: 20px;
+  border: 4px solid var(--pc); background: #fff; display: grid; cursor: default;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+}
+.dice:disabled { opacity: 1; }
+.dice i { width: 72%; height: 72%; border-radius: 50%; background: #1c1c1c; place-self: center; opacity: 0; }
+.dice i.on { opacity: 1; }
+.dice.ready { cursor: pointer; }
+
+/* whoever's turn it is: a ring around their dice blinks */
+.dice-slot::before {
+  content: ""; position: absolute; inset: -6px; border-radius: 26px; pointer-events: none;
+  border: 3px solid var(--pc); box-shadow: 0 0 14px 2px var(--pc);
+  opacity: 0;
+}
+.dice-slot.active::before { animation: blink 1s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.dice.rolling { animation: shake .16s linear infinite; }
+@keyframes shake { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+
+.medal { position: absolute; top: -10px; right: -8px; font-size: 1.35rem; pointer-events: none; }
+
+/* landscape: dice go to the sides of the board */
+@media (orientation: landscape) and (min-width: 700px) {
+  :root { --bs: min(calc(100dvh - 76px), calc(100vw - 2 * var(--dice) - 80px)); }
+  .stage {
+    width: auto; height: var(--bs); flex: none; align-content: stretch; gap: 0 16px;
+    grid-template-columns: var(--dice) var(--bs) var(--dice);
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "g board r" "y board b";
+  }
+  .board { height: var(--bs); }
+  .dice-slot[data-c="green"], .dice-slot[data-c="red"] { align-self: start; justify-self: center; }
+  .dice-slot[data-c="yellow"], .dice-slot[data-c="blue"] { align-self: end; justify-self: center; }
+}
+
+/* ---------- Number picker (popup above a tapped piece) ---------- */
+.picker {
+  position: absolute; z-index: 30; display: flex; gap: 6px; padding: 8px; border-radius: 14px;
+  background: #10202c; border: 2px solid var(--pc, #fff); box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+}
+.picker[hidden] { display: none; }
+.picker.above { transform: translate(-50%, calc(-100% - 30px)); }
+.picker.below { transform: translate(-50%, 30px); }
+.picker::after {
+  content: ""; position: absolute; left: 50%; width: 12px; height: 12px; background: #10202c;
+  border: 2px solid var(--pc, #fff); border-top: 0; border-left: 0;
+}
+.picker.above::after { bottom: -8px; transform: translateX(-50%) rotate(45deg); }
+.picker.below::after { top: -8px; transform: translateX(-50%) rotate(225deg); }
+.pv { width: 42px; height: 42px; border-radius: 50%; border: 0; background: #fff; color: #1c1c1c; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
+.pv:active { transform: scale(.92); }
+.pv:disabled { opacity: .3; cursor: default; }
+
+/* ---------- Overlay ---------- */
+.overlay { position: fixed; inset: 0; background: rgba(5, 10, 15, .72); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+.card { width: min(100%, 380px); max-height: 92dvh; overflow: auto; background: var(--panel); border-radius: 24px; padding: 22px 18px; box-shadow: 0 24px 70px rgba(0, 0, 0, .6); display: flex; flex-direction: column; gap: 14px; animation: pop .25s ease-out; }
+.card h2 { margin: 0; text-align: center; color: var(--accent); font-size: 1.6rem; }
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rank-list:empty { display: none; }
+.rank-list li { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, .07); border-radius: 14px; padding: 8px 14px; font-weight: 700; }
+.rank-list li:first-child { background: rgba(255, 204, 51, .16); }
+.rank-list img { width: 32px; height: 32px; }
+.rank-list .md { width: 1.6em; text-align: center; font-size: 1.3rem; }
+.rank-list .ps { margin-left: auto; color: var(--muted); font-size: .85rem; font-weight: 400; }
+.rules h3 { margin: 0 0 4px; font-size: 1rem; color: var(--muted); font-weight: 600; }
+.rules ul { margin: 0; padding-left: 20px; line-height: 1.7; color: var(--muted); font-size: .95rem; }
+.rules b { color: var(--ink); }
+.actions { display: flex; flex-direction: column; gap: 10px; }
+@keyframes pop { from { transform: scale(.9); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .piece.movable .hop, .dice-slot.active::before { animation: none; }
+  .dice-slot.active::before { opacity: 1; }
+}
