@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Ludo</title>
+  <meta name="description" content="Classic Ludo — play with friends or the computer, works offline">
+  <meta name="theme-color" content="#0b3a8c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ludo">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== Start screen ===== -->
+  <section id="screen-menu" class="screen active">
+    <div class="menu-card">
+      <h1 class="logo">Ludo</h1>
+      <p class="sub">Choose Human, CPU or Off for each colour</p>
+      <div id="seats" class="seats"></div>
+      <p id="menu-error" class="error" hidden></p>
+      <button id="btn-start" class="btn primary">Start Game</button>
+      <button id="btn-resume" class="btn" hidden>Resume Last Game</button>
+      <button id="btn-install" class="btn" hidden>Install App</button>
+    </div>
+  </section>
+
+  <!-- ===== Game ===== -->
+  <section id="screen-game" class="screen">
+    <header class="topbar">
+      <button id="btn-menu" class="icon-btn" aria-label="Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="19" r="2.2"/></svg></button>
+    </header>
+    <main class="stage">
+      <div class="dice-slot" data-c="green"><button class="dice" aria-label="Green dice" disabled></button><span class="medal"></span></div>
+      <div class="dice-slot" data-c="red"><button class="dice" aria-label="Red dice" disabled></button><span class="medal"></span></div>
+      <div id="board" class="board">
+        <img class="board-bg" src="assets/board/board.webp" alt="Ludo board" draggable="false">
+        <div id="pieces" class="pieces"></div>
+        <div id="picker" class="picker" hidden></div>
+      </div>
+      <div class="dice-slot" data-c="yellow"><button class="dice" aria-label="Yellow dice" disabled></button><span class="medal"></span></div>
+      <div class="dice-slot" data-c="blue"><button class="dice" aria-label="Blue dice" disabled></button><span class="medal"></span></div>
+    </main>
+  </section>
+
+  <!-- ===== Overlay (menu / result) ===== -->
+  <div id="overlay" class="overlay" hidden>
+    <div class="card">
+      <h2 id="ov-title"></h2>
+      <ol id="ov-list" class="rank-list"></ol>
+      <div id="ov-extra"></div>
+      <div id="ov-actions" class="actions"></div>
+    </div>
+  </div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
