@@ -1,14 +1,14 @@
 // بورڈ کی جیومیٹری اور مستقل اقدار
-// بورڈ 750×750 ہے، 15×15 گھر، ہر گھر 50px۔
+// Board is 900x900: 15x15 cells of 60px (matches assets/board/LUDO_BOARD.svg).
 
-export const COLORS = ['green', 'red', 'blue', 'yellow']; // گھڑی کی سمت (اوپر بائیں سے شروع)
-export const BOARD = 750;
-export const CELL = 50;
+export const COLORS = ['red', 'green', 'yellow', 'blue']; // clockwise, starting top-left
+export const BOARD = 900;
+export const CELL = 60;
 export const TRACK_LEN = 52;
 export const FINISH = 57; // 0 = base, 1..51 = track, 52..56 = home column (5 visible cells), 57 = home
 
 // ٹریک انڈیکس جہاں ہر رنگ کی گوٹی پہلی بار اترتی ہے
-export const START_IDX = { green: 1, red: 14, blue: 27, yellow: 40 };
+export const START_IDX = { red: 1, green: 14, yellow: 27, blue: 40 };
 // محفوظ گھر: چاروں سٹارٹ + چاروں ستارے (سٹارٹ سے 8 قدم آگے)
 export const SAFE_IDX = new Set([1, 9, 14, 22, 27, 35, 40, 48]);
 
@@ -30,33 +30,33 @@ export const TRACK = (() => {
   return t;
 })();
 
-// Home-column cell (p = 52..56)
+// Home-column cell (p = 52..56). Arms: red = left, green = top, yellow = right, blue = bottom.
 export function homeCell(color, p) {
   const k = p - 51; // 1..5
   switch (color) {
-    case 'green': return [k, 7];
-    case 'red': return [7, k];
-    case 'blue': return [14 - k, 7];
-    default: return [7, 14 - k]; // yellow
+    case 'red': return [k, 7];
+    case 'green': return [7, k];
+    case 'yellow': return [14 - k, 7];
+    default: return [7, 14 - k]; // blue
   }
 }
 
-// اڈے کے چار خانے (SVG کے دائروں کے مرکز)
+// The four base circles of each colour (SVG slot-COLOUR-1..4 centres)
 export const BASE_SLOTS = {
-  green: [[75, 150], [150, 75], [225, 150], [150, 225]],
-  red: [[525, 150], [600, 75], [675, 150], [600, 225]],
-  blue: [[525, 600], [600, 525], [675, 600], [600, 675]],
-  yellow: [[75, 600], [150, 525], [225, 600], [150, 675]],
+  red: [[110, 110], [250, 110], [110, 250], [250, 250]],
+  green: [[650, 110], [790, 110], [650, 250], [790, 250]],
+  blue: [[110, 650], [250, 650], [110, 790], [250, 790]],
+  yellow: [[650, 650], [790, 650], [650, 790], [790, 790]],
 };
 
-// منزل (درمیانی ستارہ) میں ہر رنگ کے مثلث کے اندر چار جگہیں
-const FIN_DIR = { green: [-1, 0], red: [0, -1], blue: [1, 0], yellow: [0, 1] };
+// Four spots inside each colour's triangle of the centre square (centre = 450,450)
+const FIN_DIR = { red: [-1, 0], green: [0, -1], yellow: [1, 0], blue: [0, 1] };
 function finishSlot(color, i) {
   const [ux, uy] = FIN_DIR[color];
   const vx = -uy, vy = ux;
-  const lateral = (i % 2 === 0 ? -1 : 1) * 10;
-  const dist = i < 2 ? 56 : 38;
-  return { x: 375 + ux * dist + vx * lateral, y: 375 + uy * dist + vy * lateral };
+  const lateral = (i % 2 === 0 ? -1 : 1) * 12;
+  const dist = i < 2 ? 67 : 46;
+  return { x: 450 + ux * dist + vx * lateral, y: 450 + uy * dist + vy * lateral };
 }
 
 // گوٹی (رنگ، پیش رفت p، نمبر i) کہاں دکھائی جائے

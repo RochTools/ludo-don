@@ -5,15 +5,15 @@ import { S } from './strings.js';
 const $ = (s) => document.querySelector(s);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
-export const COLOR_HEX = { green: '#2e9e4a', red: '#d93040', blue: '#2c6fe0', yellow: '#f0b800' };
+export const COLOR_HEX = { red: '#D82643', green: '#078A52', blue: '#1168CD', yellow: '#D58E00' };
 const STEP_MS = 190;
 const IDLE_FACE = 5; // shown on every dice before its first roll
 
 // Offsets when several pieces share one cell (SVG px)
 const STACK = {
-  2: { s: 0.72, o: [[-9, 0], [9, 0]] },
-  3: { s: 0.62, o: [[-10, -8], [10, -8], [0, 10]] },
-  4: { s: 0.55, o: [[-10, -10], [10, -10], [-10, 10], [10, 10]] },
+  2: { s: 0.72, o: [[-11, 0], [11, 0]] },
+  3: { s: 0.62, o: [[-12, -10], [12, -10], [0, 12]] },
+  4: { s: 0.55, o: [[-12, -12], [12, -12], [-12, 12], [12, 12]] },
 };
 
 export function createUI() {

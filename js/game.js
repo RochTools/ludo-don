@@ -5,7 +5,7 @@ import * as audio from './audio.js';
 import { COLORS } from './config.js';
 import { S } from './strings.js';
 
-const SAVE_KEY = 'ludo.save.v3';
+const SAVE_KEY = 'ludo.save.v4';
 
 export function loadSave() {
   try {

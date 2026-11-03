@@ -11,7 +11,7 @@ const game = createGame(ui);
 
 // ---------- Settings (who plays each colour) ----------
 const SETTINGS_KEY = 'ludo.settings.v1';
-const DEFAULT_SEATS = { green: 'human', red: 'cpu', blue: 'cpu', yellow: 'cpu' };
+const DEFAULT_SEATS = { red: 'human', green: 'cpu', yellow: 'cpu', blue: 'cpu' };
 let settings = { seats: { ...DEFAULT_SEATS } };
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}); } catch { /* */ }
 const persist = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* */ } };
