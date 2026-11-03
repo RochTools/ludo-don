@@ -82,10 +82,10 @@ button { font: inherit; color: inherit; }
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "g r" "board board" "y b";
 }
-.dice-slot[data-c="green"] { grid-area: g; justify-self: start; }
-.dice-slot[data-c="red"] { grid-area: r; justify-self: end; }
-.dice-slot[data-c="yellow"] { grid-area: y; justify-self: start; }
-.dice-slot[data-c="blue"] { grid-area: b; justify-self: end; }
+.dice-slot[data-c="red"] { grid-area: g; justify-self: start; }
+.dice-slot[data-c="green"] { grid-area: r; justify-self: end; }
+.dice-slot[data-c="blue"] { grid-area: y; justify-self: start; }
+.dice-slot[data-c="yellow"] { grid-area: b; justify-self: end; }
 .board { grid-area: board; }
 
 .board { position: relative; width: 100%; aspect-ratio: 1; direction: ltr; border-radius: 2.1%; box-shadow: 0 6px 16px rgba(0, 0, 0, .45); }
@@ -145,8 +145,8 @@ button { font: inherit; color: inherit; }
     grid-template-areas: "g board r" "y board b";
   }
   .board { height: var(--bs); }
-  .dice-slot[data-c="green"], .dice-slot[data-c="red"] { align-self: start; justify-self: center; }
-  .dice-slot[data-c="yellow"], .dice-slot[data-c="blue"] { align-self: end; justify-self: center; }
+  .dice-slot[data-c="red"], .dice-slot[data-c="green"] { align-self: start; justify-self: center; }
+  .dice-slot[data-c="blue"], .dice-slot[data-c="yellow"] { align-self: end; justify-self: center; }
 }
 
 /* ---------- Number picker (popup above a tapped piece) ---------- */
