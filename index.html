@@ -20,15 +20,51 @@
 
   <!-- ===== Start screen ===== -->
   <section id="screen-menu" class="screen active">
-    <div class="menu-card">
+    <div class="menu-wrap">
       <h1 class="logo">Ludo</h1>
-      <p class="sub">Choose Human, CPU or Off for each colour</p>
-      <div id="seats" class="seats"></div>
-      <p id="menu-error" class="error" hidden></p>
-      <button id="btn-start" class="btn primary">Start Game</button>
-      <button id="btn-resume" class="btn" hidden>Resume Last Game</button>
-      <button id="btn-install" class="btn" hidden>Install App</button>
+
+      <!-- home: the four game cards -->
+      <div class="view" data-view="home">
+        <button id="btn-resume" class="mode-card resume" hidden><span class="mc-t">Resume Last Game</span></button>
+        <button class="mode-card" data-go="computer"><img src="assets/pieces/blue.png" alt=""><span class="mc-tx"><span class="mc-t">Play with Computer</span><span class="mc-s">Challenge the CPU</span></span></button>
+        <button class="mode-card" data-soon><img src="assets/pieces/green.png" alt=""><span class="mc-tx"><span class="mc-t">Play Online</span><span class="mc-s">Play worldwide</span></span><span class="soon">Coming soon</span></button>
+        <button class="mode-card" data-go="offline"><img src="assets/pieces/red.png" alt=""><span class="mc-tx"><span class="mc-t">Play Offline</span><span class="mc-s">Pass and play with friends</span></span></button>
+        <button class="mode-card" data-soon><img src="assets/pieces/yellow.png" alt=""><span class="mc-tx"><span class="mc-t">Play as Partners</span><span class="mc-s">Team up 2 vs 2</span></span><span class="soon">Coming soon</span></button>
+        <button id="btn-install" class="btn-lite" hidden>Install App</button>
+      </div>
+
+      <!-- Play with Computer -->
+      <div class="view" data-view="computer" hidden>
+        <h2 class="vt">Play with Computer</h2>
+        <button class="opt" data-preset="c1">You vs 1 Computer</button>
+        <button class="opt" data-preset="c2">You vs 2 Computers</button>
+        <button class="opt" data-preset="c3">You vs 3 Computers</button>
+        <button class="opt" data-preset="c22">2 Friends vs 2 Computers</button>
+        <button class="opt alt" data-go="custom">Custom game</button>
+        <button class="back" data-go="home">&lsaquo; Back</button>
+      </div>
+
+      <!-- Play Offline -->
+      <div class="view" data-view="offline" hidden>
+        <h2 class="vt">Play Offline</h2>
+        <button class="opt" data-preset="p2">2 Players</button>
+        <button class="opt" data-preset="p3">3 Players</button>
+        <button class="opt" data-preset="p4">4 Players</button>
+        <button class="opt alt" data-go="custom">Custom game</button>
+        <button class="back" data-go="home">&lsaquo; Back</button>
+      </div>
+
+      <!-- Custom: choose Human / CPU / Off for each colour -->
+      <div class="view" data-view="custom" hidden>
+        <h2 class="vt">Custom game</h2>
+        <p class="sub">Choose Human, CPU or Off for each colour</p>
+        <div id="seats" class="seats"></div>
+        <p id="menu-error" class="error" hidden></p>
+        <button id="btn-start" class="opt primary">Start Game</button>
+        <button class="back" data-go="home">&lsaquo; Back</button>
+      </div>
     </div>
+    <div id="toast" class="toast" hidden>Coming soon</div>
   </section>
 
   <!-- ===== Game ===== -->
