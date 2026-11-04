@@ -1,4 +1,6 @@
-const VERSION = 'ludo-v17';
+// سروس ورکر: پہلی بار سب کچھ محفوظ، اس کے بعد انٹرنیٹ کے بغیر چلے گا۔
+// کوئی بھی فائل بدلیں تو VERSION بڑھا دیں تاکہ نئی کاپی اٹھائی جائے۔
+const VERSION = 'ludo-v15';
 const ASSETS = [
   './',
   'index.html',
@@ -6,7 +8,7 @@ const ASSETS = [
   'css/style.css',
   'js/main.js', 'js/config.js', 'js/engine.js', 'js/ai.js', 'js/audio.js',
   'js/ui.js', 'js/game.js', 'js/strings.js',
-  'assets/board/board.webp',
+  'assets/board/board.webp', 'assets/logo.webp',
   'assets/backgrounds/bg-blue.webp',
   'assets/pieces/green.png', 'assets/pieces/red.png', 'assets/pieces/blue.png', 'assets/pieces/yellow.png',
   'assets/sounds/dice.mp3', 'assets/sounds/move.mp3', 'assets/sounds/kill.mp3',

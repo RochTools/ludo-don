@@ -21,15 +21,15 @@
   <!-- ===== Start screen ===== -->
   <section id="screen-menu" class="screen active">
     <div class="menu-wrap">
-      <h1 class="logo">Ludo</h1>
+      <div class="logo-holder"><img class="logo-img" src="assets/logo.webp" alt="Ludo Don" width="768" height="512"></div>
 
       <!-- home: the four game cards -->
-      <div class="view" data-view="home">
+      <div class="view home-grid" data-view="home">
         <button id="btn-resume" class="mode-card resume" hidden><span class="mc-t">Resume Last Game</span></button>
-        <button class="mode-card" data-go="computer"><img src="assets/pieces/blue.png" alt=""><span class="mc-tx"><span class="mc-t">Play with Computer</span><span class="mc-s">Challenge the CPU</span></span></button>
-        <button class="mode-card" data-soon><img src="assets/pieces/green.png" alt=""><span class="mc-tx"><span class="mc-t">Play Online</span><span class="mc-s">Play worldwide</span></span><span class="soon">Coming soon</span></button>
-        <button class="mode-card" data-go="offline"><img src="assets/pieces/red.png" alt=""><span class="mc-tx"><span class="mc-t">Play Offline</span><span class="mc-s">Pass and play with friends</span></span></button>
-        <button class="mode-card" data-soon><img src="assets/pieces/yellow.png" alt=""><span class="mc-tx"><span class="mc-t">Play as Partners</span><span class="mc-s">Team up 2 vs 2</span></span><span class="soon">Coming soon</span></button>
+        <button class="mode-card" data-go="computer"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="9" width="52" height="34" rx="6" fill="#1d4ed8"/><rect x="10" y="13" width="44" height="26" rx="3" fill="#60a5fa"/><circle cx="24" cy="21" r="3.2" fill="#fff"/><circle cx="40" cy="21" r="3.2" fill="#fff"/><circle cx="32" cy="26" r="3.2" fill="#fff"/><circle cx="24" cy="31" r="3.2" fill="#fff"/><circle cx="40" cy="31" r="3.2" fill="#fff"/><path d="M26 43h12l3 8H23z" fill="#1d4ed8"/><rect x="16" y="51" width="32" height="5" rx="2.5" fill="#93a8d6"/></svg><span class="mc-t">Play with Computer</span></button>
+        <button class="mode-card" data-soon><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25" fill="#22c55e"/><g fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><circle cx="32" cy="32" r="25" stroke="#15803d"/><ellipse cx="32" cy="32" rx="11" ry="25"/><path d="M8 24h48M8 40h48M32 7v50"/></g></svg><span class="mc-t">Play Online</span><span class="soon">Coming soon</span></button>
+        <button class="mode-card" data-go="offline"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="12" cy="28.8" r="6.8" fill="#ef4444"/><path d="M1.0 52.6c0-8.5 5.1-14.4 11.0-14.4s11.0 6.0 11.0 14.4z" fill="#ef4444"/><circle cx="52" cy="28.8" r="6.8" fill="#3b82f6"/><path d="M41.0 52.6c0-8.5 5.1-14.4 11.0-14.4s11.0 6.0 11.0 14.4z" fill="#3b82f6"/><circle cx="32" cy="23.2" r="9.2" fill="#22c55e"/><path d="M17.1 55.4c0-11.5 6.9-19.5 14.9-19.5s14.9 8.0 14.9 19.5z" fill="#22c55e"/></svg><span class="mc-t">Play Offline</span></button>
+        <button class="mode-card" data-soon><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="18" cy="26.8" r="8.8" fill="#ef4444"/><path d="M3.7 57.6c0-11.0 6.6-18.7 14.3-18.7s14.3 7.7 14.3 18.7z" fill="#ef4444"/><circle cx="46" cy="26.8" r="8.8" fill="#eab308"/><path d="M31.7 57.6c0-11.0 6.6-18.7 14.3-18.7s14.3 7.7 14.3 18.7z" fill="#eab308"/><path d="M32 19c-6-4-8-7-8-10a4 4 0 0 1 8-1a4 4 0 0 1 8 1c0 3-2 6-8 10z" fill="#f43f5e"/></svg><span class="mc-t">Play as Partners</span><span class="soon">Coming soon</span></button>
         <button id="btn-install" class="btn-lite" hidden>Install App</button>
       </div>
 
