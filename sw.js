@@ -1,4 +1,4 @@
-const VERSION = 'ludo-v13';
+const VERSION = 'ludo-v14';
 const ASSETS = [
   './',
   'index.html',
