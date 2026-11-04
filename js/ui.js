@@ -4,7 +4,15 @@ import { S } from './strings.js';
 
 const $ = (s) => document.querySelector(s);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+// pip centres per face (% of the face)
+const PIPS = {
+  1: [[50, 50]], 2: [[28, 28], [72, 72]], 3: [[28, 28], [50, 50], [72, 72]],
+  4: [[28, 28], [72, 28], [28, 72], [72, 72]], 5: [[28, 28], [72, 28], [50, 50], [28, 72], [72, 72]],
+  6: [[28, 24], [72, 24], [28, 50], [72, 50], [28, 76], [72, 76]],
+};
+// cube rotation [x, y] that brings face v to the front
+const FACE_ROT = { 1: [0, 0], 6: [0, 180], 2: [0, -90], 5: [0, 90], 3: [-90, 0], 4: [90, 0] };
+const ROLL_MS = 900;
 export const COLOR_HEX = { red: '#D82643', green: '#078A52', blue: '#1168CD', yellow: '#D58E00' };
 const STEP_MS = 190;
 const IDLE_FACE = 5; // shown on every dice before its first roll
@@ -19,21 +27,29 @@ const STACK = {
 export function createUI() {
   const layer = $('#pieces');
   const pieceEls = {}; // "green0" -> div
-  const dice = {}; // color -> { slot, btn, pips, medal }
+  const dice = {}; // color -> { slot, btn, medal }
   let pickHandler = null;
   let diceResolve = null; // { color, fn }
 
   document.querySelectorAll('.dice-slot').forEach((slot) => {
     const c = slot.dataset.c;
     const btn = slot.querySelector('.dice');
-    btn.innerHTML = Array.from({ length: 9 }, () => '<i></i>').join('');
+    btn.innerHTML = '<div class="d-sh"></div><div class="d-lift"><div class="d-cube">' +
+      [1, 2, 3, 4, 5, 6].map((v) => `<div class="d-f" data-v="${v}">${PIPS[v].map(([x, y]) => `<i class="d-p" style="left:${x - 10}%;top:${y - 10}%"></i>`).join('')}</div>`).join('') +
+      '</div></div>';
     slot.style.setProperty('--pc', COLOR_HEX[c]);
-    dice[c] = { slot, btn, pips: [...btn.children], medal: slot.querySelector('.medal') };
+    dice[c] = { slot, btn, cube: btn.querySelector('.d-cube'), lift: btn.querySelector('.d-lift'), sh: btn.querySelector('.d-sh'), anims: [], medal: slot.querySelector('.medal') };
     btn.addEventListener('click', () => {
       if (diceResolve && diceResolve.color === c) { const f = diceResolve.fn; diceResolve = null; f(); }
     });
   });
-  function showFace(c, v) { dice[c].pips.forEach((p, k) => p.classList.toggle('on', !!v && PIPS[v].includes(k))); }
+  function showFace(c, v) {
+    const d = dice[c];
+    d.anims.forEach((a) => a.cancel());
+    d.anims = [];
+    const [rx, ry] = FACE_ROT[v];
+    d.cube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  }
 
   layer.addEventListener('click', (e) => {
     const pc = e.target.closest('.piece');
@@ -97,7 +113,7 @@ export function createUI() {
         const d = dice[c];
         d.slot.style.visibility = order.includes(c) ? 'visible' : 'hidden';
         d.slot.classList.remove('active');
-        d.btn.classList.remove('ready', 'rolling');
+        d.btn.classList.remove('ready');
         d.btn.disabled = true;
         d.medal.textContent = '';
         showFace(c, IDLE_FACE);
@@ -195,18 +211,34 @@ export function createUI() {
         diceResolve = { color, fn: () => { b.classList.remove('ready'); b.disabled = true; resolve(); } };
       });
     },
+    /** Lift, spin, drop and bounce; the result is already decided, the spin just lands on it */
     async rollDice(color, value) {
-      const b = dice[color].btn;
-      b.classList.add('rolling');
-      const t0 = performance.now();
-      let f = 0;
-      while (performance.now() - t0 < 650) {
-        f = (f + 1 + (f % 2)) % 6; // cycles through faces, no randomness needed
-        showFace(color, f + 1);
-        await sleep(85);
-      }
-      b.classList.remove('rolling');
-      showFace(color, value);
+      const d = dice[color];
+      const [rx, ry] = FACE_ROT[value];
+      const o = { duration: ROLL_MS, fill: 'forwards' };
+      d.anims.forEach((a) => a.cancel());
+      d.anims = [
+        d.cube.animate([
+          { transform: `rotateX(${rx + 720}deg) rotateY(${ry + 1080}deg) rotateZ(90deg)` },
+          { transform: `rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(0deg)` },
+        ], { ...o, easing: 'cubic-bezier(.2,.6,.3,1)' }),
+        d.lift.animate([
+          { transform: 'translateY(0) scale(1)' },
+          { transform: 'translateY(-26px) scale(1.15)', offset: 0.35 },
+          { transform: 'translateY(0) scale(1)', offset: 0.7 },
+          { transform: 'translateY(-6px)', offset: 0.85 },
+          { transform: 'translateY(0)' },
+        ], o),
+        d.sh.animate([
+          { transform: 'scale(1)', opacity: 1 },
+          { transform: 'scale(.6)', opacity: 0.5, offset: 0.35 },
+          { transform: 'scale(1)', opacity: 1, offset: 0.7 },
+          { transform: 'scale(.9)', offset: 0.85 },
+          { transform: 'scale(1)' },
+        ], o),
+      ];
+      await d.anims[0].finished.catch(() => {});
+      showFace(color, value); // freeze on the final face, drop the animations
     },
 
     // ---- Overlay ----
