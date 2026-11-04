@@ -130,8 +130,7 @@ button { font: inherit; color: inherit; }
 .d-f[data-v="5"] { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
 .d-f[data-v="3"] { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
 .d-f[data-v="4"] { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
-.d-f[data-v="6"] { background: radial-gradient(circle at 30% 25%, #444, #111 70%); }
-.d-p { position: absolute; width: 20%; height: 20%; border-radius: 50%;
+.d-p { position: absolute; transform: translate(-50%, -50%); width: 20%; height: 20%; border-radius: 50%;
   background: radial-gradient(circle at 60% 65%, #444 0, #000 70%);
   box-shadow: inset 1px 2px 3px rgba(0,0,0,.65), 0 1px 1px #fff; }
 .d-f[data-v="1"] .d-p { width: 42%; height: 42%;
@@ -139,7 +138,6 @@ button { font: inherit; color: inherit; }
   box-shadow: inset 1px 3px 5px rgba(10,42,106,.55), 0 1px 1px #fff; }
 .d-f[data-v="2"] .d-p { background: radial-gradient(circle at 60% 65%, #ff5a5a 0, #d40000 70%);
   box-shadow: inset 1px 3px 4px rgba(80,0,0,.5), 0 1px 1px #fff; }
-.d-f[data-v="6"] .d-p { background: radial-gradient(circle at 35% 30%, #fff, #e8e8e8 70%); box-shadow: 0 0 3px rgba(255,255,255,.5); }
 
 /* whoever's turn it is: a ring around their dice blinks */
 .dice-slot::before {
