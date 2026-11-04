@@ -35,7 +35,7 @@ export function createUI() {
     const c = slot.dataset.c;
     const btn = slot.querySelector('.dice');
     btn.innerHTML = '<div class="d-sh"></div><div class="d-lift"><div class="d-cube">' +
-      [1, 2, 3, 4, 5, 6].map((v) => `<div class="d-f" data-v="${v}">${PIPS[v].map(([x, y]) => `<i class="d-p" style="left:${x - 10}%;top:${y - 10}%"></i>`).join('')}</div>`).join('') +
+      [1, 2, 3, 4, 5, 6].map((v) => `<div class="d-f" data-v="${v}">${PIPS[v].map(([x, y]) => `<i class="d-p" style="left:${x}%;top:${y}%"></i>`).join('')}</div>`).join('') +
       '</div></div>';
     slot.style.setProperty('--pc', COLOR_HEX[c]);
     dice[c] = { slot, btn, cube: btn.querySelector('.d-cube'), lift: btn.querySelector('.d-lift'), sh: btn.querySelector('.d-sh'), anims: [], medal: slot.querySelector('.medal') };
