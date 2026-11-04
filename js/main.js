@@ -47,8 +47,7 @@ function seatConfig() {
   return cfg;
 }
 
-$('#btn-start').addEventListener('click', () => {
-  const cfg = seatConfig();
+function begin(cfg) {
   if (Object.values(cfg).filter(Boolean).length < 2) {
     const e = $('#menu-error');
     e.textContent = S.needTwo;
@@ -56,12 +55,44 @@ $('#btn-start').addEventListener('click', () => {
     return;
   }
   game.start(cfg);
+}
+$('#btn-start').addEventListener('click', () => begin(seatConfig()));
+
+// ---------- Menu views and quick presets ----------
+// seats: red top-left, green top-right, yellow bottom-right, blue bottom-left (red/yellow and green/blue face each other)
+const H = 'human', C = 'cpu';
+const PRESETS = {
+  c1: { red: H, yellow: C },
+  c2: { red: H, green: C, yellow: C },
+  c3: { red: H, green: C, yellow: C, blue: C },
+  c22: { red: H, green: C, yellow: H, blue: C }, // friends sit opposite each other, so do the computers
+  p2: { red: H, yellow: H },
+  p3: { red: H, green: H, yellow: H },
+  p4: { red: H, green: H, yellow: H, blue: H },
+};
+function showView(name) {
+  document.querySelectorAll('#screen-menu .view').forEach((v) => { v.hidden = v.dataset.view !== name; });
+  if (name === 'custom') $('#menu-error').hidden = true;
+}
+let toastTimer = 0;
+function toast() {
+  const t = $('#toast');
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 1600);
+}
+$('#screen-menu').addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) { showView(go.dataset.go); return; }
+  if (e.target.closest('[data-soon]')) { toast(); return; }
+  const p = e.target.closest('[data-preset]');
+  if (p) begin({ red: null, green: null, yellow: null, blue: null, ...PRESETS[p.dataset.preset] });
 });
 
 function refreshResume() { $('#btn-resume').hidden = !loadSave(); }
 $('#btn-resume').addEventListener('click', () => { const s = loadSave(); if (s) game.resume(s); });
 
-game.onExit = () => { refreshResume(); ui.showScreen('menu'); };
+game.onExit = () => { refreshResume(); showView('home'); ui.showScreen('menu'); };
 $('#btn-menu').addEventListener('click', () => game.openPause());
 
 // ---------- Install button ----------
