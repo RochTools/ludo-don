@@ -112,15 +112,34 @@ button { font: inherit; color: inherit; }
 .dice-slot { position: relative; z-index: 3; --pc: #fff; transition: transform .2s; }
 .dice-slot:not(.active) { transform: scale(.92); }
 .dice {
-  position: relative; width: var(--dice); height: var(--dice); padding: 8px; border-radius: 20px;
-  border: 4px solid var(--pc); background: #fff; display: grid; cursor: default;
-  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+  position: relative; width: var(--dice); height: var(--dice); padding: 0; border: 0; background: none;
+  perspective: 420px; cursor: default; --s: 54px;
 }
 .dice:disabled { opacity: 1; }
-.dice i { width: 72%; height: 72%; border-radius: 50%; background: #1c1c1c; place-self: center; opacity: 0; }
-.dice i.on { opacity: 1; }
 .dice.ready { cursor: pointer; }
+.d-sh { position: absolute; left: 50%; bottom: 5px; width: 46px; height: 12px; margin-left: -23px; border-radius: 50%;
+  background: radial-gradient(rgba(0,0,0,.45), rgba(0,0,0,0) 70%); }
+.d-lift { position: absolute; left: 50%; top: 50%; width: var(--s); height: var(--s); margin: calc(var(--s) / -2 - 4px) 0 0 calc(var(--s) / -2); }
+.d-cube { position: absolute; inset: 0; transform-style: preserve-3d; }
+.d-f { position: absolute; inset: 0; border-radius: 24%; backface-visibility: hidden;
+  background: radial-gradient(circle at 30% 25%, #fff 0, #f4f4f4 45%, #d9dbe0 100%);
+  box-shadow: inset 0 0 0 2px #fff, inset -3px -4px 8px rgba(0,0,0,.13); }
+.d-f[data-v="1"] { transform: translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="6"] { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="2"] { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="5"] { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="3"] { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="4"] { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+.d-f[data-v="6"] { background: radial-gradient(circle at 30% 25%, #444, #111 70%); }
+.d-p { position: absolute; width: 20%; height: 20%; border-radius: 50%;
+  background: radial-gradient(circle at 60% 65%, #444 0, #000 70%);
+  box-shadow: inset 1px 2px 3px rgba(0,0,0,.65), 0 1px 1px #fff; }
+.d-f[data-v="1"] .d-p { width: 42%; height: 42%;
+  background: radial-gradient(circle at 35% 30%, #6fb0ff, #1168CD 60%, #0a3f8f);
+  box-shadow: inset 1px 3px 5px rgba(10,42,106,.55), 0 1px 1px #fff; }
+.d-f[data-v="2"] .d-p { background: radial-gradient(circle at 60% 65%, #ff5a5a 0, #d40000 70%);
+  box-shadow: inset 1px 3px 4px rgba(80,0,0,.5), 0 1px 1px #fff; }
+.d-f[data-v="6"] .d-p { background: radial-gradient(circle at 35% 30%, #fff, #e8e8e8 70%); box-shadow: 0 0 3px rgba(255,255,255,.5); }
 
 /* whoever's turn it is: a ring around their dice blinks */
 .dice-slot::before {
@@ -130,8 +149,6 @@ button { font: inherit; color: inherit; }
 }
 .dice-slot.active::before { animation: blink 1s ease-in-out infinite; }
 @keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
-.dice.rolling { animation: shake .16s linear infinite; }
-@keyframes shake { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
 
 .medal { position: absolute; top: -10px; right: -8px; font-size: 1.35rem; pointer-events: none; }
 
