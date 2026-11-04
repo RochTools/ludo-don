@@ -50,7 +50,7 @@ export function createGame(ui) {
     const alive = () => id === run;
     while (alive() && !state.over) {
       const color = E.current(state);
-      const human = seats[color] === 'human';
+      const human = seats[E.mover(state)] === 'human'; // the one who moves decides, even on a finished partner's dice
       save();
       ui.setTurn(state);
 
@@ -85,10 +85,11 @@ export function createGame(ui) {
       }
       while (st === 'moves' && alive()) {
         const moves = E.allMoves(state);
+        const mc = E.mover(state); // the colour being moved (the partner's once this player is home)
         let choice;
-        const distinct = new Set(moves.map((m) => `${state.pieces[color][m.piece]}:${m.value}`)).size;
+        const distinct = new Set(moves.map((m) => `${state.pieces[mc][m.piece]}:${m.value}`)).size;
         if (human && distinct > 1) {
-          choice = await ui.pickMove(color, moves, state.bank);
+          choice = await ui.pickMove(mc, moves, state.bank);
         } else {
           await sleep(human ? 350 : 650);
           choice = human ? moves[0] : chooseBest(state);
@@ -96,7 +97,7 @@ export function createGame(ui) {
         if (!alive()) return;
 
         const res = E.applyMove(state, choice.piece, choice.value);
-        await ui.animateMove(color, choice.piece, res.path, () => audio.play('move', 0.8));
+        await ui.animateMove(res.color, choice.piece, res.path, () => audio.play('move', 0.8));
         if (!alive()) return;
         if (res.captured.length) {
           audio.play('kill', 0.9);
@@ -118,10 +119,10 @@ export function createGame(ui) {
     ui.setTurn(state);
     audio.play('over');
     ui.showOverlay({
-      title: S.gameOver,
+      title: state.partner ? `${S.name(state.finished[0])} & ${S.name(state.partner[state.finished[0]])} win!` : S.gameOver,
       ranking: state.finished,
       actions: [
-        { label: S.playAgain, primary: true, onClick: () => start(seatConfig()) },
+        { label: S.playAgain, primary: true, onClick: () => start(seatConfig(), !!state.partner) },
         { label: S.menu, onClick: () => api.onExit && api.onExit() },
       ],
     });
@@ -129,11 +130,11 @@ export function createGame(ui) {
 
   const seatConfig = () => Object.fromEntries(COLORS.map((c) => [c, seats[c] || null]));
 
-  function start(cfg) {
+  function start(cfg, withTeams = false) {
     const order = COLORS.filter((c) => cfg[c]);
     seats = {};
     order.forEach((c) => { seats[c] = cfg[c]; });
-    state = E.newGame(order);
+    state = E.newGame(order, withTeams);
     begin();
   }
 

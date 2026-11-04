@@ -13,18 +13,35 @@ export function trackIndex(color, p) {
 }
 
 /** order: colours in play, clockwise */
-export function newGame(order) {
+export const PARTNER = { red: 'yellow', yellow: 'red', green: 'blue', blue: 'green' };
+
+/**
+ * order: colours in play, clockwise.
+ * teams: 2 v 2 with partners sitting opposite (red+yellow, green+blue); needs all four colours.
+ *  - partners never capture each other and may share a cell
+ *  - the team wins when BOTH partners have all four pieces home
+ *  - a player who is already home still rolls, and spends those numbers on the partner's pieces
+ */
+export function newGame(order, teams = false) {
   const pieces = {};
   for (const c of order) pieces[c] = [0, 0, 0, 0];
-  return { order: [...order], turn: 0, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces };
+  const useTeams = teams && order.length === 4;
+  return { order: [...order], turn: 0, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces, partner: useTeams ? { ...PARTNER } : null };
 }
 
 export const current = (s) => s.order[s.turn];
+const homeDone = (s, c) => s.pieces[c].every((p) => p === FINISH);
+/** Colour whose pieces move now: the current player's, or the partner's once the current player is home */
+export const mover = (s) => {
+  const c = current(s);
+  return s.partner && homeDone(s, c) ? s.partner[c] : c;
+};
+export const teamOf = (s, c) => (s.partner ? [c, s.partner[c]] : [c]);
 export const rollDice = (rng = Math.random) => 1 + Math.floor(rng() * 6);
 
 /** Pieces of the current player that can use `value` */
 export function legalMoves(s, value) {
-  const color = current(s);
+  const color = mover(s);
   const res = [];
   s.pieces[color].forEach((p, i) => {
     if (p === 0) { if (value === 6) res.push(i); }
@@ -66,7 +83,7 @@ export function applyMove(s, i, value) {
   if (k < 0) throw new Error('value not in bank');
   s.bank.splice(k, 1);
 
-  const color = current(s);
+  const color = mover(s);
   const from = s.pieces[color][i];
   const to = from === 0 ? 1 : from + value;
   const path = [];
@@ -78,7 +95,7 @@ export function applyMove(s, i, value) {
   const idx = trackIndex(color, to);
   if (idx >= 0 && !SAFE_IDX.has(idx)) {
     for (const oc of s.order) {
-      if (oc === color) continue;
+      if (oc === color || (s.partner && oc === s.partner[color])) continue; // partners are safe from each other
       s.pieces[oc].forEach((p, j) => {
         if (trackIndex(oc, p) === idx) { s.pieces[oc][j] = 0; captured.push({ color: oc, piece: j }); }
       });
@@ -86,9 +103,20 @@ export function applyMove(s, i, value) {
   }
 
   const reachedHome = to === FINISH;
-  const playerDone = s.pieces[color].every((p) => p === FINISH);
+  const playerDone = homeDone(s, color);
   if (playerDone && !s.finished.includes(color)) s.finished.push(color);
-  if (s.order.length - s.finished.length <= 1) {
+  if (s.partner) {
+    // a team wins when both partners are home; the other team loses
+    const win = s.order.find((c) => homeDone(s, c) && homeDone(s, s.partner[c]));
+    if (win) {
+      const team = [win, s.partner[win]];
+      const first = s.finished.filter((c) => team.includes(c));
+      const rest = s.finished.filter((c) => !team.includes(c));
+      for (const c of s.order) if (!team.includes(c) && !rest.includes(c)) rest.push(c);
+      s.finished = [...first, ...rest];
+      s.over = true;
+    }
+  } else if (s.order.length - s.finished.length <= 1) {
     for (const c of s.order) if (!s.finished.includes(c)) s.finished.push(c);
     s.over = true;
   }
@@ -109,7 +137,8 @@ export function settle(s) {
   if (s.bank.length && allMoves(s).length) return 'moves';
   s.bank = [];
   s.sixes = 0;
-  if (s.bonus > 0 && !s.finished.includes(color)) { s.bonus--; return 'roll'; }
+  // in team games a finished player still rolls for the partner, so bonus rolls stay
+  if (s.bonus > 0 && (s.partner || !s.finished.includes(color))) { s.bonus--; return 'roll'; }
   s.bonus = 0;
   nextTurn(s);
   return 'next';
@@ -127,5 +156,5 @@ export function nextTurn(s) {
   s.sixes = 0;
   s.bank = [];
   if (s.over) return;
-  do { s.turn = (s.turn + 1) % s.order.length; } while (s.finished.includes(s.order[s.turn]));
+  do { s.turn = (s.turn + 1) % s.order.length; } while (!s.partner && s.finished.includes(s.order[s.turn]));
 }

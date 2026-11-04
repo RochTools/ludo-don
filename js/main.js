@@ -47,14 +47,14 @@ function seatConfig() {
   return cfg;
 }
 
-function begin(cfg) {
+function begin(cfg, teams = false) {
   if (Object.values(cfg).filter(Boolean).length < 2) {
     const e = $('#menu-error');
     e.textContent = S.needTwo;
     e.hidden = false;
     return;
   }
-  game.start(cfg);
+  game.start(cfg, teams);
 }
 $('#btn-start').addEventListener('click', () => begin(seatConfig()));
 
@@ -65,10 +65,15 @@ const PRESETS = {
   c1: { red: H, yellow: C },
   c2: { red: H, green: C, yellow: C },
   c3: { red: H, green: C, yellow: C, blue: C },
-  c22: { red: H, green: C, yellow: H, blue: C }, // friends sit opposite each other, so do the computers
   p2: { red: H, yellow: H },
   p3: { red: H, green: H, yellow: H },
   p4: { red: H, green: H, yellow: H, blue: H },
+};
+// partner games: red+yellow vs green+blue, partners sit opposite and never capture each other
+const TEAM_PRESETS = {
+  t1: { red: H, green: C, yellow: C, blue: C },
+  t2: { red: H, green: C, yellow: H, blue: C },
+  t4: { red: H, green: H, yellow: H, blue: H },
 };
 function showView(name) {
   document.querySelectorAll('#screen-menu .view').forEach((v) => { v.hidden = v.dataset.view !== name; });
@@ -86,7 +91,9 @@ $('#screen-menu').addEventListener('click', (e) => {
   if (go) { showView(go.dataset.go); return; }
   if (e.target.closest('[data-soon]')) { toast(); return; }
   const p = e.target.closest('[data-preset]');
-  if (p) begin({ red: null, green: null, yellow: null, blue: null, ...PRESETS[p.dataset.preset] });
+  const none = { red: null, green: null, yellow: null, blue: null };
+  if (p && TEAM_PRESETS[p.dataset.preset]) begin({ ...none, ...TEAM_PRESETS[p.dataset.preset] }, true);
+  else if (p) begin({ ...none, ...PRESETS[p.dataset.preset] });
 });
 
 function refreshResume() { $('#btn-resume').hidden = !loadSave(); }

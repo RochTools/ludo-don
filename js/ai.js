@@ -10,7 +10,7 @@
 //   - risk: chance an opponent can hit each of our pieces on an unsafe cell next turn
 //   + extra attention to whoever is closest to winning
 import { FINISH, SAFE_IDX, START_IDX, TRACK_LEN } from './config.js';
-import { allMoves, applyMove, current, trackIndex } from './engine.js';
+import { allMoves, applyMove, mover, teamOf, trackIndex } from './engine.js';
 
 // Approximate chance an opponent piece can land exactly d cells ahead of itself next turn
 // (a single roll hits each of 1..6 with 1/6; a 6 followed by another number reaches 7..11).
@@ -28,8 +28,9 @@ function clone(s) {
 function risk(s, color, idx) {
   if (SAFE_IDX.has(idx)) return 0;
   let safe = 1;
+  const mates = teamOf(s, color);
   for (const oc of s.order) {
-    if (oc === color) continue;
+    if (mates.includes(oc)) continue;
     let inBase = 0;
     for (const p of s.pieces[oc]) {
       if (p === 0) { inBase++; continue; }
@@ -52,8 +53,9 @@ const worth = (p) => (p === 0 ? 0 : p + 14);
 /** How good is this board for `color`? */
 function evaluate(s, color, rng) {
   let v = 0;
+  const mates = teamOf(s, color); // in team games the partner's progress counts as ours
   for (const c of s.order) {
-    const mine = c === color;
+    const mine = mates.includes(c);
     // opponents who are close to winning matter more
     const done = s.pieces[c].filter((p) => p === FINISH).length;
     const w = mine ? 1 : -(0.55 + 0.2 * done);
@@ -70,12 +72,12 @@ function evaluate(s, color, rng) {
   }
 
   // danger to our pieces, and pressure on theirs
-  for (const p of s.pieces[color]) {
-    const idx = trackIndex(color, p);
+  for (const mc of mates) for (const p of s.pieces[mc]) {
+    const idx = trackIndex(mc, p);
     if (idx < 0) continue;
     v -= risk(s, color, idx) * worth(p) * 0.7;
     for (const oc of s.order) {
-      if (oc === color) continue;
+      if (mates.includes(oc)) continue;
       for (const q of s.pieces[oc]) {
         const j = trackIndex(oc, q);
         if (j < 0 || SAFE_IDX.has(j)) continue;
@@ -85,7 +87,7 @@ function evaluate(s, color, rng) {
     }
   }
   v += s.bonus * 12; // earned bonus rolls
-  if (s.over) v += s.finished[0] === color ? 5000 : -5000;
+  if (s.over) v += mates.includes(s.finished[0]) ? 5000 : -5000;
   return v + rng() * 1.5;
 }
 
@@ -105,7 +107,7 @@ function search(s, color, rng) {
 
 /** Best { piece, value } to play now */
 export function chooseBest(s, rng = Math.random) {
-  const color = current(s);
+  const color = mover(s);
   const moves = allMoves(s);
   let best = moves[0], bestV = -Infinity;
   for (const m of moves) {

@@ -29,6 +29,7 @@ export const S = {
     'Coloured and star cells are <b>safe</b>. On other cells an opponent can capture you.',
     'You need the <b>exact</b> number to reach home.',
     'The first player to bring all four pieces home wins.',
+    '<b>Partner games (2 v 2):</b> partners never capture each other. The team wins when <b>both</b> partners have all four pieces home. A player who is already home keeps rolling, and the numbers are played on the partner\'s pieces.',
   ],
 
 };
