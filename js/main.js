@@ -100,6 +100,7 @@ function refreshResume() { $('#btn-resume').hidden = !loadSave(); }
 $('#btn-resume').addEventListener('click', () => { const s = loadSave(); if (s) game.resume(s); });
 
 game.onExit = () => { refreshResume(); showView('home'); ui.showScreen('menu'); };
+ui.onGear((c) => game.playerMenu(c));
 $('#btn-menu').addEventListener('click', () => game.openPause());
 
 // ---------- Install button ----------

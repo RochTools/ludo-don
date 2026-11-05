@@ -19,6 +19,7 @@ const clearSave = () => { try { localStorage.removeItem(SAVE_KEY); } catch { /* 
 export function createGame(ui) {
   let state = null;
   let seats = null;
+  let orig = null; // the seats as chosen in the menu (a player who hands over to the computer is only 'away')
   let run = 0;
   let paused = false;
   let waiters = [];
@@ -28,7 +29,7 @@ export function createGame(ui) {
     while (paused) await new Promise((r) => waiters.push(r));
   };
   const save = () => {
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify({ state, seats })); } catch { /* */ }
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify({ state, seats, orig })); } catch { /* */ }
   };
   function setPaused(v) {
     paused = v;
@@ -43,6 +44,7 @@ export function createGame(ui) {
     ui.setupBoard(state.order);
     ui.layoutAll(state, true);
     ui.setTurn(state);
+    ui.markSeats(state, seats);
     loop(run);
   }
 
@@ -50,15 +52,16 @@ export function createGame(ui) {
     const alive = () => id === run;
     while (alive() && !state.over) {
       const color = E.current(state);
-      const human = seats[E.mover(state)] === 'human'; // the one who moves decides, even on a finished partner's dice
+      const isHuman = () => seats[E.mover(state)] === 'human'; // the one who moves decides, even on a finished partner's dice
       save();
       ui.setTurn(state);
 
       // 1) Roll. Every 6 is saved and the player rolls again; the first other number
       //    ends the sequence. A third 6 in a row loses the turn.
       let forfeit = false;
-      for (;;) {
-        if (human) await ui.waitDiceClick(color);
+      // (a game restarted in the middle of a turn, e.g. after someone quit, still has saved numbers to spend)
+      if (!state.bank.length) for (;;) {
+        if (isHuman()) await ui.waitDiceClick(color);
         else await sleep(700);
         if (!alive()) return;
         const value = E.rollDice();
@@ -86,10 +89,12 @@ export function createGame(ui) {
       while (st === 'moves' && alive()) {
         const moves = E.allMoves(state);
         const mc = E.mover(state); // the colour being moved (the partner's once this player is home)
+        const human = isHuman();
         let choice;
         const distinct = new Set(moves.map((m) => `${state.pieces[mc][m.piece]}:${m.value}`)).size;
         if (human && distinct > 1) {
           choice = await ui.pickMove(mc, moves, state.bank);
+          if (!choice) choice = chooseBest(state); // the player handed over to the computer while choosing
         } else {
           await sleep(human ? 350 : 650);
           choice = human ? moves[0] : chooseBest(state);
@@ -120,7 +125,7 @@ export function createGame(ui) {
     audio.play('over');
     ui.showOverlay({
       title: state.partner ? `${S.name(state.finished[0])} & ${S.name(state.partner[state.finished[0]])} win!` : S.gameOver,
-      ranking: state.finished,
+      ranking: state.finished.filter((c) => !E.isLeft(state, c)),
       actions: [
         { label: S.playAgain, primary: true, onClick: () => start(seatConfig(), !!state.partner) },
         { label: S.menu, onClick: () => api.onExit && api.onExit() },
@@ -128,12 +133,13 @@ export function createGame(ui) {
     });
   }
 
-  const seatConfig = () => Object.fromEntries(COLORS.map((c) => [c, seats[c] || null]));
+  const seatConfig = () => Object.fromEntries(COLORS.map((c) => [c, (orig || seats)[c] || null]));
 
   function start(cfg, withTeams = false) {
     const order = COLORS.filter((c) => cfg[c]);
     seats = {};
     order.forEach((c) => { seats[c] = cfg[c]; });
+    orig = { ...seats };
     state = E.newGame(order, withTeams);
     begin();
   }
@@ -141,6 +147,7 @@ export function createGame(ui) {
   function resume(saved) {
     state = saved.state;
     seats = saved.seats;
+    orig = saved.orig || { ...saved.seats };
     begin();
   }
 
@@ -157,6 +164,60 @@ export function createGame(ui) {
     });
   }
 
-  const api = { start, resume, openPause, onExit: null };
+  // ---------- Gear next to a player's dice: hand over to the computer for a while, or leave ----------
+  const closeMenu = () => { ui.hideOverlay(); setPaused(false); };
+  function playerMenu(color) {
+    if (!state || state.over || E.isLeft(state, color)) return;
+    setPaused(true);
+    const away = !!(state.away && state.away[color]);
+    const name = S.name(color);
+    ui.showOverlay({
+      title: name,
+      text: away ? 'The computer is playing for you.' : 'Need a break? Let the computer play for you until you are back.',
+      actions: [
+        away
+          ? { label: "I'm back", primary: true, onClick: () => { delete state.away[color]; seats[color] = 'human'; ui.markSeats(state, seats); closeMenu(); } }
+          : { label: 'Let AI play', primary: true, onClick: () => {
+              state.away = state.away || {};
+              state.away[color] = true;
+              seats[color] = 'cpu';
+              ui.markSeats(state, seats);
+              ui.releaseWaits(); // if it is this player's turn right now, the computer takes it from here
+              closeMenu();
+            } },
+        { label: 'Leave game', onClick: () => confirmLeave(color) },
+        { label: 'Close', onClick: closeMenu },
+      ],
+    });
+  }
+  function confirmLeave(color) {
+    ui.showOverlay({
+      title: 'Do you want to continue?',
+      text: `Do you really want to leave the game? Your pieces will be removed. This cannot be undone.`,
+      actions: [
+        { label: 'Yes, leave', onClick: () => doLeave(color) },
+        { label: 'No', primary: true, onClick: closeMenu },
+      ],
+    });
+  }
+  function doLeave(color) {
+    run++; // stop the running turn loop; a new one starts from the new state
+    ui.releaseWaits();
+    ui.clearMovable();
+    E.leave(state, color);
+    seats[color] = 'cpu';
+    setPaused(false);
+    ui.hideOverlay();
+    ui.layoutAll(state, true);
+    ui.setTurn(state);
+    ui.markSeats(state, seats);
+    if (state.over) { finish(); return; }
+    // nobody who is still playing is a person (everyone quit or handed over for good): back to the menu
+    const person = state.order.some((c) => !E.isLeft(state, c) && (seats[c] === 'human' || (state.away && state.away[c])));
+    if (!person) { clearSave(); api.onExit && api.onExit(); return; }
+    loop(run);
+  }
+
+  const api = { start, resume, openPause, playerMenu, onExit: null };
   return api;
 }

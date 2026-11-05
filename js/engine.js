@@ -26,10 +26,12 @@ export function newGame(order, teams = false) {
   const pieces = {};
   for (const c of order) pieces[c] = [0, 0, 0, 0];
   const useTeams = teams && order.length === 4;
-  return { order: [...order], turn: 0, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces, partner: useTeams ? { ...PARTNER } : null };
+  return { order: [...order], turn: 0, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces, partner: useTeams ? { ...PARTNER } : null, left: [], away: {} };
 }
 
 export const current = (s) => s.order[s.turn];
+/** Colours that quit the game (their pieces are removed; counted as home so the rest of the rules keep working) */
+export const isLeft = (s, c) => !!(s.left && s.left.includes(c));
 const homeDone = (s, c) => s.pieces[c].every((p) => p === FINISH);
 /** Colour whose pieces move now: the current player's, or the partner's once the current player is home */
 export const mover = (s) => {
@@ -105,23 +107,48 @@ export function applyMove(s, i, value) {
   const reachedHome = to === FINISH;
   const playerDone = homeDone(s, color);
   if (playerDone && !s.finished.includes(color)) s.finished.push(color);
+  checkEnd(s);
+  if (!s.over && !playerDone && (captured.length > 0 || reachedHome)) s.bonus++;
+  return { color, piece: i, value, from, to, path, captured, reachedHome, playerDone };
+}
+
+/** Has the game been decided? Sets s.over and the final order in s.finished */
+export function checkEnd(s) {
+  if (s.over) return;
+  const left = (c) => isLeft(s, c);
   if (s.partner) {
-    // a team wins when both partners are home; the other team loses
-    const win = s.order.find((c) => homeDone(s, c) && homeDone(s, s.partner[c]));
+    // a team wins when both partners are home; the other team loses. A team whose players both quit loses at once.
+    let win = s.order.find((c) => homeDone(s, c) && homeDone(s, s.partner[c]) && !(left(c) && left(s.partner[c])));
+    const gone = s.order.find((c) => left(c) && left(s.partner[c]));
+    if (gone) win = s.order.find((c) => c !== gone && c !== s.partner[gone]);
     if (win) {
       const team = [win, s.partner[win]];
       const first = s.finished.filter((c) => team.includes(c));
+      for (const c of team) if (!first.includes(c)) first.push(c);
       const rest = s.finished.filter((c) => !team.includes(c));
       for (const c of s.order) if (!team.includes(c) && !rest.includes(c)) rest.push(c);
       s.finished = [...first, ...rest];
       s.over = true;
     }
-  } else if (s.order.length - s.finished.length <= 1) {
-    for (const c of s.order) if (!s.finished.includes(c)) s.finished.push(c);
-    s.over = true;
+  } else {
+    const active = s.order.filter((c) => !s.finished.includes(c) && !left(c));
+    if (active.length <= 1) {
+      for (const c of active) s.finished.push(c);
+      s.over = true;
+    }
   }
-  if (!s.over && !playerDone && (captured.length > 0 || reachedHome)) s.bonus++;
-  return { color, piece: i, value, from, to, path, captured, reachedHome, playerDone };
+}
+
+/** A player quits: pieces are removed, and if it was their turn it passes on */
+export function leave(s, color) {
+  if (s.over || isLeft(s, color) || !s.order.includes(color)) return;
+  const wasTheirTurn = current(s) === color;
+  s.left = [...(s.left || []), color];
+  s.pieces[color] = [FINISH, FINISH, FINISH, FINISH];
+  s.finished = s.finished.filter((c) => c !== color);
+  if (s.away) delete s.away[color];
+  checkEnd(s);
+  if (!s.over && wasTheirTurn) endTurn(s);
 }
 
 /**
@@ -156,5 +183,5 @@ export function nextTurn(s) {
   s.sixes = 0;
   s.bank = [];
   if (s.over) return;
-  do { s.turn = (s.turn + 1) % s.order.length; } while (!s.partner && s.finished.includes(s.order[s.turn]));
+  do { s.turn = (s.turn + 1) % s.order.length; } while (isLeft(s, s.order[s.turn]) ? !s.partner : (!s.partner && s.finished.includes(s.order[s.turn])));
 }

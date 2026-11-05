@@ -30,6 +30,8 @@ export function createUI() {
   const dice = {}; // color -> { slot, btn, medal }
   let pickHandler = null;
   let diceResolve = null; // { color, fn }
+  let pickCancel = null; // resolves a pending pickMove with null
+  let gearHandler = null;
 
   document.querySelectorAll('.dice-slot').forEach((slot) => {
     const c = slot.dataset.c;
@@ -39,6 +41,14 @@ export function createUI() {
       '</div></div>';
     slot.style.setProperty('--pc', COLOR_HEX[c]);
     dice[c] = { slot, btn, cube: btn.querySelector('.d-cube'), lift: btn.querySelector('.d-lift'), sh: btn.querySelector('.d-sh'), anims: [], medal: slot.querySelector('.medal') };
+    const gear = document.createElement('button');
+    gear.className = 'gear';
+    gear.hidden = true;
+    gear.setAttribute('aria-label', 'Player options');
+    gear.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.3 7.3 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.3 7.3 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.5h4l.4-2.5c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>';
+    gear.addEventListener('click', () => gearHandler && gearHandler(c));
+    slot.appendChild(gear);
+    dice[c].gear = gear;
     btn.addEventListener('click', () => {
       if (diceResolve && diceResolve.color === c) { const f = diceResolve.fn; diceResolve = null; f(); }
     });
@@ -179,13 +189,33 @@ export function createUI() {
         const pieces = [...new Set(moves.map((m) => m.piece))];
         pieces.forEach((i) => pieceEls[color + i].classList.add('movable'));
         const sameNumbers = new Set(bank).size <= 1;
-        const done = (choice) => { this.clearMovable(); resolve(choice); };
+        const done = (choice) => { pickCancel = null; this.clearMovable(); resolve(choice); };
+        pickCancel = () => done(null);
         pickHandler = (i) => {
           const legal = moves.filter((m) => m.piece === i).map((m) => m.value);
           if (sameNumbers) return done({ piece: i, value: legal[0] });
           openPicker(color, i, bank, legal, (v) => done({ piece: i, value: v }));
         };
       });
+    },
+    /** Let any pending 'tap the dice' / 'pick a piece' wait finish (the computer takes over) */
+    releaseWaits() {
+      if (diceResolve) { const f = diceResolve.fn; diceResolve = null; f(); }
+      if (pickCancel) { const f = pickCancel; pickCancel = null; f(); }
+    },
+    onGear(fn) { gearHandler = fn; },
+    /** Show the gear for people (or people handed over to the computer), grey out players who left */
+    markSeats(state, seats) {
+      for (const c of COLORS) {
+        const d = dice[c];
+        const inGame = state.order.includes(c);
+        const left = !!(state.left && state.left.includes(c));
+        const away = !!(state.away && state.away[c]);
+        d.slot.classList.toggle('gone', left);
+        d.slot.classList.toggle('away', away);
+        d.gear.hidden = !inGame || left || !(seats[c] === 'human' || away);
+        for (let i = 0; i < 4; i++) { const el = pieceEls[c + i]; if (el) el.style.display = left ? 'none' : ''; }
+      }
     },
     clearMovable() {
       pickHandler = null;
@@ -242,14 +272,14 @@ export function createUI() {
     },
 
     // ---- Overlay ----
-    showOverlay({ title, ranking, rules, actions }) {
+    showOverlay({ title, ranking, rules, text, actions }) {
       $('#ov-title').textContent = title;
       $('#ov-list').innerHTML = (ranking || []).map((c, k) => `<li>
         <span class="md">${S.medals[k]}</span><img src="assets/pieces/${c}.png" alt="">
         <span>${S.name(c)}</span><span class="ps">${S.ranks[k]}</span></li>`).join('');
       $('#ov-extra').innerHTML = rules
         ? `<div class="rules"><h3>${S.rulesTitle}</h3><ul>${S.rules.map((r) => `<li>${r}</li>`).join('')}</ul></div>`
-        : '';
+        : text ? `<p class="ov-text">${text}</p>` : '';
       const box = $('#ov-actions');
       box.innerHTML = '';
       for (const a of actions) {
