@@ -9,7 +9,7 @@
   /* page background (path is relative to this css file). Alternative: ../assets/backgrounds/bg-deco.webp */
   --bg-img: url(../assets/backgrounds/bg-blue.webp);
   /* portrait: board fills the width, leaving room for top bar + two dice rows */
-  --bs: min(calc(100vw - 16px), calc(100dvh - 64px - 2 * var(--dice) - 40px));
+  --bs: min(calc(100vw - 44px), calc(100dvh - 64px - 2 * var(--dice) - 56px));
 }
 
 * { box-sizing: border-box; }
@@ -179,7 +179,7 @@ button { font: inherit; color: inherit; }
 
 /* landscape: dice go to the sides of the board */
 @media (orientation: landscape) and (min-width: 700px) {
-  :root { --bs: min(calc(100dvh - 76px), calc(100vw - 2 * var(--dice) - 80px)); }
+  :root { --bs: min(calc(100dvh - 100px), calc(100vw - 2 * var(--dice) - 104px)); }
   .stage {
     width: auto; height: var(--bs); flex: none; align-content: stretch; gap: 0 16px;
     grid-template-columns: var(--dice) var(--bs) var(--dice);
@@ -252,3 +252,23 @@ button { font: inherit; color: inherit; }
 .ov-text { margin: 0; text-align: center; color: var(--muted, #cfd9e3); line-height: 1.4; }
 
 .rules { max-height: 56dvh; overflow: auto; }
+
+/* ---------- Gold frame around the board: gems in the four corner colours, studs on the edges ---------- */
+.board { isolation: isolate; outline: 1.5px solid #6b4306; }
+.board::before {
+  content: ""; position: absolute; inset: -9px; z-index: -1; border-radius: 14px; pointer-events: none;
+  background: linear-gradient(135deg, #fff0b0 0, #e0a82e 25%, #a8700e 50%, #f2cf6b 75%, #9a6209 100%);
+  box-shadow: 0 0 0 1.5px #6b4306, 0 8px 18px rgba(0, 0, 0, .5);
+}
+.board::after {
+  content: ""; position: absolute; inset: -13px; z-index: 5; pointer-events: none;
+  background:
+    radial-gradient(circle closest-side at 42% 38%, #fff 0, #ff9db0 8%, #d82643 34%, #7a0b1f 58%, #f6d36a 64%, #9a6209 94%, transparent 100%) 0 0 / 26px 26px no-repeat,
+    radial-gradient(circle closest-side at 42% 38%, #fff 0, #8df0bd 8%, #078A52 34%, #034a2b 58%, #f6d36a 64%, #9a6209 94%, transparent 100%) 100% 0 / 26px 26px no-repeat,
+    radial-gradient(circle closest-side at 42% 38%, #fff 0, #ffe9a0 8%, #e8a300 34%, #8a5a00 58%, #f6d36a 64%, #9a6209 94%, transparent 100%) 100% 100% / 26px 26px no-repeat,
+    radial-gradient(circle closest-side at 42% 38%, #fff 0, #9ccaff 8%, #1168CD 34%, #0a3a7a 58%, #f6d36a 64%, #9a6209 94%, transparent 100%) 0 100% / 26px 26px no-repeat,
+    radial-gradient(circle closest-side, #fff3c0 0, #d49a1c 70%, transparent 100%) 50% 0 / 14px 14px no-repeat,
+    radial-gradient(circle closest-side, #fff3c0 0, #d49a1c 70%, transparent 100%) 50% 100% / 14px 14px no-repeat,
+    radial-gradient(circle closest-side, #fff3c0 0, #d49a1c 70%, transparent 100%) 0 50% / 14px 14px no-repeat,
+    radial-gradient(circle closest-side, #fff3c0 0, #d49a1c 70%, transparent 100%) 100% 50% / 14px 14px no-repeat;
+}
