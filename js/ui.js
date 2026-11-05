@@ -45,7 +45,7 @@ export function createUI() {
     gear.className = 'gear';
     gear.hidden = true;
     gear.setAttribute('aria-label', 'Player options');
-    gear.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.3 7.3 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.3 7.3 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.5h4l.4-2.5c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>';
+    gear.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M10.62 4.53 L10.73 1.68 L13.27 1.68 L13.38 4.53 A7.6 7.6 0 0 1 16.30 5.74 L18.40 3.80 L20.20 5.60 L18.26 7.70 A7.6 7.6 0 0 1 19.47 10.62 L22.32 10.73 L22.32 13.27 L19.47 13.38 A7.6 7.6 0 0 1 18.26 16.30 L20.20 18.40 L18.40 20.20 L16.30 18.26 A7.6 7.6 0 0 1 13.38 19.47 L13.27 22.32 L10.73 22.32 L10.62 19.47 A7.6 7.6 0 0 1 7.70 18.26 L5.60 20.20 L3.80 18.40 L5.74 16.30 A7.6 7.6 0 0 1 4.53 13.38 L1.68 13.27 L1.68 10.73 L4.53 10.62 A7.6 7.6 0 0 1 5.74 7.70 L3.80 5.60 L5.60 3.80 L7.70 5.74 A7.6 7.6 0 0 1 10.62 4.53 Z M8.5 12 a3.5 3.5 0 1 0 7.0 0 a3.5 3.5 0 1 0 -7.0 0 Z"/></svg>';
     gear.addEventListener('click', () => gearHandler && gearHandler(c));
     slot.appendChild(gear);
     dice[c].gear = gear;
