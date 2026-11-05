@@ -26,7 +26,9 @@ export function newGame(order, teams = false) {
   const pieces = {};
   for (const c of order) pieces[c] = [0, 0, 0, 0];
   const useTeams = teams && order.length === 4;
-  return { order: [...order], turn: 0, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces, partner: useTeams ? { ...PARTNER } : null, left: [], away: {} };
+  // blue (bottom of the screen) always starts when it is playing
+  const first = Math.max(0, order.indexOf('blue'));
+  return { order: [...order], turn: first, sixes: 0, bank: [], bonus: 0, finished: [], over: false, pieces, partner: useTeams ? { ...PARTNER } : null, left: [], away: {} };
 }
 
 export const current = (s) => s.order[s.turn];

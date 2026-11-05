@@ -61,18 +61,19 @@ $('#btn-start').addEventListener('click', () => begin(seatConfig()));
 // ---------- Menu views and quick presets ----------
 // seats: red top-left, green top-right, yellow bottom-right, blue bottom-left (red/yellow and green/blue face each other)
 const H = 'human', C = 'cpu';
+// Blue (bottom-left) is always the human's seat and green (top-right) sits opposite.
 const PRESETS = {
-  c1: { red: H, yellow: C },
-  c2: { red: H, green: C, yellow: C },
-  c3: { red: H, green: C, yellow: C, blue: C },
-  p2: { red: H, yellow: H },
-  p3: { red: H, green: H, yellow: H },
+  c1: { green: C, blue: H },
+  c2: { red: C, green: C, blue: H },
+  c3: { red: C, green: C, yellow: C, blue: H },
+  p2: { green: H, blue: H },
+  p3: { red: H, green: H, blue: H },
   p4: { red: H, green: H, yellow: H, blue: H },
 };
 // partner games: red+yellow vs green+blue, partners sit opposite and never capture each other
 const TEAM_PRESETS = {
-  t1: { red: H, green: C, yellow: C, blue: C },
-  t2: { red: H, green: C, yellow: H, blue: C },
+  t1: { red: C, green: C, yellow: C, blue: H },   // you (blue) + computer (green) vs 2 computers
+  t2: { red: C, green: H, yellow: C, blue: H },   // 2 friends vs 2 computers
   t4: { red: H, green: H, yellow: H, blue: H },
 };
 function showView(name) {

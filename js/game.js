@@ -151,17 +151,20 @@ export function createGame(ui) {
     begin();
   }
 
-  /** Three-dot menu: rules + resume / main menu */
+  /** Gear menu: resume / start a new game / read the rules (the rules stay closed until asked for) */
   function openPause() {
     setPaused(true);
     ui.showOverlay({
       title: S.paused,
-      rules: true,
       actions: [
         { label: S.resume, primary: true, onClick: () => { ui.hideOverlay(); setPaused(false); } },
-        { label: S.newGame, onClick: () => { run++; setPaused(false); ui.hideOverlay(); api.onExit && api.onExit(); } },
+        { label: 'Start New Game', onClick: () => { run++; setPaused(false); ui.hideOverlay(); api.onExit && api.onExit(); } },
+        { label: 'Read Rules', onClick: showRules },
       ],
     });
+  }
+  function showRules() {
+    ui.showOverlay({ title: S.rulesTitle, rules: true, actions: [{ label: 'Back', primary: true, onClick: openPause }] });
   }
 
   // ---------- Gear next to a player's dice: hand over to the computer for a while, or leave ----------

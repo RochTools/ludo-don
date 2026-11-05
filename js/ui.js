@@ -278,7 +278,7 @@ export function createUI() {
         <span class="md">${S.medals[k]}</span><img src="assets/pieces/${c}.png" alt="">
         <span>${S.name(c)}</span><span class="ps">${S.ranks[k]}</span></li>`).join('');
       $('#ov-extra').innerHTML = rules
-        ? `<div class="rules"><h3>${S.rulesTitle}</h3><ul>${S.rules.map((r) => `<li>${r}</li>`).join('')}</ul></div>`
+        ? `<div class="rules"><ul>${S.rules.map((r) => `<li>${r}</li>`).join('')}</ul></div>`
         : text ? `<p class="ov-text">${text}</p>` : '';
       const box = $('#ov-actions');
       box.innerHTML = '';
