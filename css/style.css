@@ -250,3 +250,5 @@ button { font: inherit; color: inherit; }
   background: var(--accent); color: #2a2000; padding: 1px 7px; border-radius: 99px; pointer-events: none; }
 .dice-slot.gone { opacity: .3; pointer-events: none; }
 .ov-text { margin: 0; text-align: center; color: var(--muted, #cfd9e3); line-height: 1.4; }
+
+.rules { max-height: 56dvh; overflow: auto; }
