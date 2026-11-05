@@ -231,3 +231,22 @@ button { font: inherit; color: inherit; }
   .dice-slot.active::before { opacity: 1; }
 }
 @media (max-width: 340px) { .mc-t { font-size: .9rem; } .mode-card:has(.soon) { padding-top: 26px; } .mode-card svg { min-width: 50px; } }
+
+/* ---------- Gear next to a player's dice (quit / let the computer play) ---------- */
+.gear { position: absolute; top: 50%; width: 34px; height: 34px; margin-top: -17px; padding: 6px; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .22); box-shadow: 0 2px 6px rgba(0, 0, 0, .3); cursor: pointer; }
+.gear[hidden] { display: none; }
+.gear svg { display: block; width: 100%; height: 100%; }
+.gear:active { background: rgba(255, 255, 255, .4); }
+.dice-slot[data-c="red"] .gear, .dice-slot[data-c="blue"] .gear { left: 100%; margin-left: 6px; }
+.dice-slot[data-c="green"] .gear, .dice-slot[data-c="yellow"] .gear { right: 100%; margin-right: 6px; }
+@media (orientation: landscape) and (min-width: 700px) {
+  .gear { left: 50% !important; right: auto !important; margin: 0 0 0 -17px !important; top: 100%; }
+  .dice-slot[data-c="blue"] .gear, .dice-slot[data-c="yellow"] .gear { top: auto; bottom: 100%; }
+}
+.dice-slot.away .gear { background: var(--accent); }
+.dice-slot.away .gear svg path { fill: #2a2000; }
+.dice-slot.away::after { content: "AI"; position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); font-size: .68rem; font-weight: 800;
+  background: var(--accent); color: #2a2000; padding: 1px 7px; border-radius: 99px; pointer-events: none; }
+.dice-slot.gone { opacity: .3; pointer-events: none; }
+.ov-text { margin: 0; text-align: center; color: var(--muted, #cfd9e3); line-height: 1.4; }
