@@ -19,9 +19,9 @@ const IDLE_FACE = 5; // shown on every dice before its first roll
 
 // Offsets when several pieces share one cell (SVG px)
 const STACK = {
-  2: { s: 0.72, o: [[-11, 0], [11, 0]] },
-  3: { s: 0.62, o: [[-12, -10], [12, -10], [0, 12]] },
-  4: { s: 0.55, o: [[-12, -12], [12, -12], [-12, 12], [12, 12]] },
+  2: { s: 0.68, o: [[-12, 0], [12, 0]] },
+  3: { s: 0.6, o: [[-12, -10], [12, -10], [0, 12]] },
+  4: { s: 0.52, o: [[-12, -12], [12, -12], [-12, 12], [12, 12]] },
 };
 
 export function createUI() {
@@ -48,6 +48,10 @@ export function createUI() {
     gear.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.3 7.3 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.3 7.3 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.5h4l.4-2.5c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>';
     gear.addEventListener('click', () => gearHandler && gearHandler(c));
     slot.appendChild(gear);
+    const arrow = document.createElement('div');
+    arrow.className = 'turn-arrow';
+    arrow.innerHTML = '<svg viewBox="0 0 40 44" aria-hidden="true"><path d="M14 3h12v17h10L20 41 4 20h10z" fill="var(--pc)" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/></svg>';
+    slot.appendChild(arrow);
     dice[c].gear = gear;
     btn.addEventListener('click', () => {
       if (diceResolve && diceResolve.color === c) { const f = diceResolve.fn; diceResolve = null; f(); }
@@ -90,9 +94,9 @@ export function createUI() {
     if (!picker.hidden && !e.target.closest('.picker') && !e.target.closest('.piece.movable')) closePicker();
   });
 
-  // Pieces are 5.8% of the board wide and positioned with transform (no layout per frame).
+  // Pieces are 6.4% of the board wide (a cell is 6.67%, so a piece nearly fills its cell) and positioned with transform (no layout per frame).
   // translate % is relative to the piece itself, so convert board px -> piece-widths.
-  const PIECE_W = 5.8;
+  const PIECE_W = 6.4;
   const tr = (v) => (v / BOARD) * 100 / PIECE_W * 100 - 50;
   function setPos(el, x, y, s = 1) {
     el.style.transform = `translate(${tr(x)}%, ${tr(y)}%) scale(${s})`;
@@ -113,7 +117,7 @@ export function createUI() {
           el.className = 'piece';
           el.dataset.color = c;
           el.dataset.i = i;
-          el.innerHTML = `<span class="hop"><img src="assets/pieces/${c}.png" alt="" draggable="false"></span>`;
+          el.innerHTML = `<span class="hop"><img src="assets/pieces/${c}.webp" alt="" draggable="false"></span>`;
           layer.appendChild(el);
           pieceEls[c + i] = el;
         }
@@ -275,7 +279,7 @@ export function createUI() {
     showOverlay({ title, ranking, rules, text, actions }) {
       $('#ov-title').textContent = title;
       $('#ov-list').innerHTML = (ranking || []).map((c, k) => `<li>
-        <span class="md">${S.medals[k]}</span><img src="assets/pieces/${c}.png" alt="">
+        <span class="md">${S.medals[k]}</span><img src="assets/pieces/${c}.webp" alt="">
         <span>${S.name(c)}</span><span class="ps">${S.ranks[k]}</span></li>`).join('');
       $('#ov-extra').innerHTML = rules
         ? `<div class="rules"><ul>${S.rules.map((r) => `<li>${r}</li>`).join('')}</ul></div>`

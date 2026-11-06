@@ -25,7 +25,7 @@ const MODES = [['human', S.human], ['cpu', S.cpu], ['off', S.off]];
 function renderSeats() {
   $('#seats').innerHTML = COLORS.map((c) => `
     <div class="seat">
-      <img src="assets/pieces/${c}.png" alt="">
+      <img src="assets/pieces/${c}.webp" alt="">
       <span class="nm">${S.name(c)}</span>
       <div class="seg" data-c="${c}">
         ${MODES.map(([m, label]) => `<button data-m="${m}" class="${(settings.seats[c] || 'off') === m ? 'on' : ''}">${label}</button>`).join('')}
