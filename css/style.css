@@ -9,7 +9,7 @@
   /* page background (path is relative to this css file). Alternative: ../assets/backgrounds/bg-deco.webp */
   --bg-img: url(../assets/backgrounds/bg-blue.webp);
   /* portrait: board fills the width, leaving room for top bar + two dice rows */
-  --bs: min(calc(100vw - 16px), calc(100dvh - 64px - 2 * var(--dice) - 40px));
+  --bs: min(calc(100vw - 4px), calc(100dvh - 64px - 2 * var(--dice) - 76px));
 }
 
 * { box-sizing: border-box; }
@@ -93,7 +93,7 @@ button { font: inherit; color: inherit; }
 .btn.primary { background: var(--accent); color: #2a2000; font-weight: 800; box-shadow: 0 6px 20px rgba(255, 204, 51, .3); }
 
 /* ---------- Game ---------- */
-#screen-game { flex-direction: column; align-items: center; padding: env(safe-area-inset-top) 8px env(safe-area-inset-bottom); }
+#screen-game { flex-direction: column; align-items: center; padding: env(safe-area-inset-top) 2px env(safe-area-inset-bottom); }
 .topbar { width: 100%; display: flex; justify-content: flex-end; padding-top: 8px; height: 56px; }
 .icon-btn { width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #fff; display: grid; place-items: center; cursor: pointer; }
 .icon-btn svg { width: 26px; height: 26px; fill: #fff; display: block; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .75)); }
@@ -103,7 +103,7 @@ button { font: inherit; color: inherit; }
 /* two dice above the board (green, red), two below (yellow, blue) */
 .stage {
   flex: 1; min-height: 0; width: var(--bs);
-  display: grid; align-content: center; gap: 12px 0;
+  display: grid; align-content: center; gap: 12px 0; padding-bottom: 36px; /* room for the arrow under the bottom dice */
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "g r" "board board" "y b";
 }
@@ -113,31 +113,33 @@ button { font: inherit; color: inherit; }
 .dice-slot[data-c="yellow"] { grid-area: b; justify-self: end; }
 .board { grid-area: board; }
 
-.board { position: relative; width: 100%; aspect-ratio: 1; direction: ltr; border-radius: 2.1%; box-shadow: 0 6px 16px rgba(0, 0, 0, .45); }
+.board { position: relative; width: 100%; aspect-ratio: 1; direction: ltr; border-radius: 1.4%; box-shadow: 0 4px 10px rgba(0, 0, 0, .45); contain: layout paint; }
 .board-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 
 .pieces { position: absolute; inset: 0; pointer-events: none; }
 .piece {
-  position: absolute; left: 0; top: 0; width: 5.8%; aspect-ratio: 1; pointer-events: none;
-  transition: transform var(--step) ease-in-out;
+  position: absolute; left: 0; top: 0; width: 6.4%; aspect-ratio: 1; pointer-events: none;
+  transition: transform var(--step) ease-in-out; will-change: transform;
 }
 .pieces.instant .piece { transition: none; }
 .piece .hop { display: block; width: 100%; height: 100%; }
-.piece img { display: block; width: 100%; height: 100%; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .55)); -webkit-user-drag: none; }
+.piece img { display: block; width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 2px 3px rgba(0, 0, 0, .6); -webkit-user-drag: none; } /* box-shadow, not filter: far cheaper on phones */
 .piece.hopping .hop { animation: hop var(--step) ease-out; }
 @keyframes hop { 50% { transform: translateY(-38%) scale(1.15); } }
 .piece.movable { pointer-events: auto; cursor: pointer; }
 .piece.movable .hop { animation: bounce .7s ease-in-out infinite; }
-.piece.movable img { filter: drop-shadow(0 0 6px var(--accent)); }
-.piece.movable::after { content: ""; position: absolute; inset: -22%; border: 3px solid var(--accent); border-radius: 50%; animation: ring 1s ease-out infinite; pointer-events: none; }
+.piece.movable img { box-shadow: 0 0 7px 2px var(--accent); }
+.piece.movable::after { content: ""; position: absolute; inset: -14%; border: 3px solid var(--accent); border-radius: 50%; animation: ring 1s ease-out infinite; pointer-events: none; }
 @keyframes bounce { 50% { transform: translateY(-16%); } }
 @keyframes ring { from { transform: scale(.8); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
 
 /* ---------- Dice ---------- (only transform / opacity are animated: cheap on phones) */
-.dice-slot { position: relative; z-index: 3; --pc: #fff; transition: transform .2s; }
-.dice-slot:not(.active) { transform: scale(.92); }
+.dice-slot { position: relative; z-index: 3; --pc: #fff; }
+/* only the player whose turn it is sees a dice; everyone else's dice box disappears */
+.dice-slot:not(.active) .dice { opacity: 0; pointer-events: none; }
+.dice-slot:not(.active) .gear { opacity: .55; }
 .dice {
-  position: relative; width: var(--dice); height: var(--dice); padding: 0; border: 0; background: none;
+  position: relative; display: block; width: var(--dice); height: var(--dice); padding: 0; border: 0; background: none;
   perspective: 420px; cursor: default; --s: 54px;
 }
 .dice:disabled { opacity: 1; }
@@ -164,24 +166,30 @@ button { font: inherit; color: inherit; }
 .d-f[data-v="2"] .d-p { background: radial-gradient(circle at 60% 65%, #ff5a5a 0, #d40000 70%);
   box-shadow: inset 1px 3px 4px rgba(80,0,0,.5), 0 1px 1px #fff; }
 
-/* whoever's turn it is: a ring around their dice blinks */
+/* every player has the same permanent box; only the player whose turn it is sees a dice in it, and an arrow points at it */
 .dice-slot::before {
-  content: ""; position: absolute; inset: 2px 6px 10px; border-radius: 20px; pointer-events: none;
-  border: 2px solid var(--pc);
-  background: radial-gradient(circle, transparent 55%, var(--pc) 160%);
-  box-shadow: 0 0 9px var(--pc), inset 0 0 9px var(--pc);
-  opacity: 0;
+  content: ""; position: absolute; inset: 3px 7px 11px; border-radius: 16px; pointer-events: none;
+  border: 3px solid rgba(255, 255, 255, .75);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .36));
+  box-shadow: inset 0 -3px 8px rgba(0, 0, 0, .18), 0 3px 8px rgba(0, 0, 0, .35);
 }
-.dice-slot.active::before { animation: blink 1.1s ease-in-out infinite; }
-@keyframes blink { 0%, 100% { opacity: .3; transform: scale(.97); } 50% { opacity: .95; transform: scale(1.05); } }
+.turn-arrow { position: absolute; left: 50%; bottom: 100%; width: 32px; height: 36px; margin: 0 0 0 -16px; display: none; pointer-events: none; }
+.turn-arrow svg { display: block; width: 100%; height: 100%; }
+.dice-slot.active .turn-arrow { display: block; animation: arrow-bounce .6s ease-in-out infinite; }
+@keyframes arrow-bounce { 0%, 100% { transform: translateY(-8px); } 50% { transform: translateY(0); } }
+/* bottom row: the arrow sits under the box and points up */
+.dice-slot[data-c="blue"] .turn-arrow, .dice-slot[data-c="yellow"] .turn-arrow { bottom: auto; top: 100%; margin-top: -8px; transform-origin: 50% 50%; }
+.dice-slot[data-c="blue"] .turn-arrow svg, .dice-slot[data-c="yellow"] .turn-arrow svg { transform: rotate(180deg); }
+.dice-slot[data-c="blue"].active .turn-arrow, .dice-slot[data-c="yellow"].active .turn-arrow { animation-name: arrow-bounce-up; }
+@keyframes arrow-bounce-up { 0%, 100% { transform: translateY(8px); } 50% { transform: translateY(0); } }
 
 .medal { position: absolute; top: -10px; right: -8px; font-size: 1.35rem; pointer-events: none; }
 
 /* landscape: dice go to the sides of the board */
 @media (orientation: landscape) and (min-width: 700px) {
-  :root { --bs: min(calc(100dvh - 76px), calc(100vw - 2 * var(--dice) - 80px)); }
+  :root { --bs: min(calc(100dvh - 76px), calc(100vw - 2 * var(--dice) - 76px)); }
   .stage {
-    width: auto; height: var(--bs); flex: none; align-content: stretch; gap: 0 16px;
+    width: auto; height: var(--bs); flex: none; padding-bottom: 0; align-content: stretch; gap: 0 16px;
     grid-template-columns: var(--dice) var(--bs) var(--dice);
     grid-template-rows: 1fr 1fr;
     grid-template-areas: "g board r" "y board b";
@@ -189,6 +197,9 @@ button { font: inherit; color: inherit; }
   .board { height: var(--bs); }
   .dice-slot[data-c="red"], .dice-slot[data-c="green"] { align-self: start; justify-self: center; }
   .dice-slot[data-c="blue"], .dice-slot[data-c="yellow"] { align-self: end; justify-self: center; }
+  .dice-slot[data-c="blue"] .turn-arrow, .dice-slot[data-c="yellow"] .turn-arrow { top: auto; bottom: 100%; }
+  .dice-slot[data-c="blue"] .turn-arrow svg, .dice-slot[data-c="yellow"] .turn-arrow svg { transform: none; }
+  .dice-slot[data-c="blue"].active .turn-arrow, .dice-slot[data-c="yellow"].active .turn-arrow { animation-name: arrow-bounce; }
 }
 
 /* ---------- Number picker (popup above a tapped piece) ---------- */
@@ -227,8 +238,7 @@ button { font: inherit; color: inherit; }
 @keyframes pop { from { transform: scale(.9); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .piece.movable .hop, .dice-slot.active::before { animation: none; }
-  .dice-slot.active::before { opacity: 1; }
+  .piece.movable .hop, .dice-slot.active .turn-arrow { animation: none; }
 }
 @media (max-width: 340px) { .mc-t { font-size: .9rem; } .mode-card:has(.soon) { padding-top: 26px; } .mode-card svg { min-width: 50px; } }
 
