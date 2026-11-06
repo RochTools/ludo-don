@@ -1,6 +1,6 @@
 // سروس ورکر: پہلی بار سب کچھ محفوظ، اس کے بعد انٹرنیٹ کے بغیر چلے گا۔
 // کوئی بھی فائل بدلیں تو VERSION بڑھا دیں تاکہ نئی کاپی اٹھائی جائے۔
-const VERSION = 'ludo-v26';
+const VERSION = 'ludo-v27';
 const ASSETS = [
   './',
   'index.html',
@@ -8,9 +8,9 @@ const ASSETS = [
   'css/style.css',
   'js/main.js', 'js/config.js', 'js/engine.js', 'js/ai.js', 'js/audio.js',
   'js/ui.js', 'js/game.js', 'js/strings.js',
-  'assets/board/board.webp', 'assets/logo.webp',
+  'assets/board/board.webp', 'assets/logo.webp', 'assets/menu/computer.webp', 'assets/menu/partners.webp', 'assets/menu/online.webp', 'assets/menu/offline.webp',
   'assets/backgrounds/bg-blue.webp',
-  'assets/pieces/green.png', 'assets/pieces/red.png', 'assets/pieces/blue.png', 'assets/pieces/yellow.png',
+  'assets/pieces/green.webp', 'assets/pieces/red.webp', 'assets/pieces/blue.webp', 'assets/pieces/yellow.webp',
   'assets/sounds/dice.mp3', 'assets/sounds/move.mp3', 'assets/sounds/kill.mp3',
   'assets/sounds/win.mp3', 'assets/sounds/game-over.mp3',
   'assets/icons/icon-192.png', 'assets/icons/icon-512.png', 'assets/icons/maskable-512.png',
