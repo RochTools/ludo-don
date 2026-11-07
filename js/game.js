@@ -52,7 +52,9 @@ export function createGame(ui) {
     const alive = () => id === run;
     while (alive() && !state.over) {
       const color = E.current(state);
-      const isHuman = () => seats[E.mover(state)] === 'human'; // the one who moves decides, even on a finished partner's dice
+      // The one who moves decides (a finished player's partner), unless the dice owner handed over to the
+      // computer: then the computer plays that whole turn, rolling the dice and moving the partner's pieces too.
+      const isHuman = () => seats[E.mover(state)] === 'human' && !(state.away && state.away[E.current(state)]);
       save();
       ui.setTurn(state);
 
@@ -185,7 +187,9 @@ export function createGame(ui) {
               state.away[color] = true;
               seats[color] = 'cpu';
               ui.markSeats(state, seats);
-              ui.releaseWaits(); // if it is this player's turn right now, the computer takes it from here
+              // Only free a pending 'tap the dice' / 'pick a piece' if it is waiting for THIS player
+              // (their own turn, or their finished partner's turn). Another player's wait must stay.
+              if (E.current(state) === color || E.mover(state) === color) ui.releaseWaits();
               closeMenu();
             } },
         { label: 'Leave game', onClick: () => confirmLeave(color) },
